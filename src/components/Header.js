@@ -1,10 +1,17 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import Button from "./Button";
 
 const Header = ({ headerRef }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isEditing =
+    location.pathname.includes("/experience/edit") ||
+    location.pathname.includes("/trip/edit");
+
+  const maxWidth = isEditing ? "100%" : "1200px";
 
   const onLoginClicked = () => {
     navigate("/login");
@@ -12,7 +19,7 @@ const Header = ({ headerRef }) => {
 
   return (
     <Wrapper ref={headerRef}>
-      <Container>
+      <Container maxWidth={maxWidth}>
         <Group>
           <Logo to="/">Perfect Trip</Logo>
         </Group>
@@ -33,9 +40,9 @@ const Container = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+  max-width: ${({ maxWidth }) => maxWidth};
   margin: 0 auto;
-  padding: 10px 20px;
+  padding: 10px 30px;
 `;
 
 const Group = styled.div``;

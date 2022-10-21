@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import Topography from "../components/Topography";
 import Button from "../components/Button";
+import Label from "../components/Label";
 import Input from "../components/Input";
 import Icon from "../components/Icon";
 
@@ -28,16 +29,10 @@ const Login = () => {
     <Wrapper>
       <Topography />
       <Container>
-        <Header>Welcome Back!</Header>
+        <Header>Hello There, Traveler!</Header>
         <Field>
-          <Label htmlFor="email">
-            <Icon
-              icon="envelope"
-              margin="0 4px 0 0"
-              color="neutral"
-              shade="500"
-            />
-            Email
+          <Label id="email" text="Email">
+            <Icon icon="envelope" color="neutral" shade="500" />
           </Label>
           <Input
             id="email"
@@ -48,9 +43,8 @@ const Login = () => {
           />
         </Field>
         <Field>
-          <Label htmlFor="username">
-            <Icon icon="user" margin="0 4px 0 0" color="neutral" shade="500" />
-            Username
+          <Label id="username" text="Username">
+            <Icon icon="user" color="neutral" shade="500" />
           </Label>
           <Input
             id="username"
@@ -61,14 +55,8 @@ const Login = () => {
           />
         </Field>
         <Field>
-          <Label htmlFor="passwordA">
-            <Icon
-              icon="lock-keyhole"
-              margin="0 4px 0 0"
-              color="neutral"
-              shade="500"
-            />
-            Password
+          <Label id="passwordA" text="Password">
+            <Icon icon="lock-keyhole" color="neutral" shade="500" />
           </Label>
           <Input
             id="passwordA"
@@ -80,14 +68,8 @@ const Login = () => {
           />
         </Field>
         <Field>
-          <Label htmlFor="passwordB">
-            <Icon
-              icon="lock-keyhole"
-              margin="0 4px 0 0"
-              color="neutral"
-              shade="500"
-            />
-            Confirm Password
+          <Label id="passwordB" text="Confirm Password">
+            <Icon icon="lock-keyhole" color="neutral" shade="500" />
           </Label>
           <Input
             id="passwordB"
@@ -134,11 +116,6 @@ const Header = styled.h1`
 
 const Field = styled.div`
   margin-bottom: 20px;
-`;
-
-const Label = styled.label`
-  font-weight: 700;
-  color: ${({ theme }) => theme.neutral["700"]};
 `;
 
 const Footer = styled.p`

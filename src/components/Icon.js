@@ -17,7 +17,6 @@ const Icon = ({ icon, color, shade, margin, size }) => (
 
 const Container = styled(FontAwesomeIcon)`
   margin: ${({ margin }) => margin};
-  font-size: ${({ size }) => size};
   color: ${({ theme, color, shade }) =>
     color && shade ? theme[color][shade] : "inherit"};
 `;

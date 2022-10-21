@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Input = ({ id, type, placeholder, value, onChange }) => (
+const TextArea = ({ id, type, placeholder, value, onChange }) => (
   <Element
     id={id}
     type={type}
@@ -10,7 +10,7 @@ const Input = ({ id, type, placeholder, value, onChange }) => (
   />
 );
 
-const Element = styled.input`
+const Element = styled.textarea`
   width: 100%;
   padding: 12px 14px;
   border: none;
@@ -25,4 +25,4 @@ const Element = styled.input`
   }
 `;
 
-export default Input;
+export default TextArea;
