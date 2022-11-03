@@ -1,9 +1,9 @@
 import axios from "axios";
 
 const baseURL =
-  process.env.NODE_ENV === "production"
-    ? "https://perfect-trip.herokuapp.com"
-    : "https://jnb-api.ngrok.io";
+  process.env.NODE_ENV === "development"
+    ? "https://jnb-api.ngrok.io"
+    : "https://perfect-trip.herokuapp.com";
 
 export const getPlaces = async (query) => {
   try {
