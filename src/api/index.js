@@ -1,11 +1,16 @@
 import axios from "axios";
 
+const baseURL =
+  process.env.NODE_ENV === "production"
+    ? "https://perfect-trip.herokuapp.com"
+    : "https://jnb-api.ngrok.io";
+
 export const getPlaces = async (query) => {
   try {
     const result = await axios({
       method: "get",
-      baseURL: "https://jnb-api.ngrok.io",
       url: `/places/?query=${query}`,
+      baseURL,
     });
 
     if (result.status === 200) {
@@ -31,8 +36,8 @@ export const getExperiences = async ({ coords, keywords }) => {
 
     const result = await axios({
       method: "get",
-      baseURL: "https://jnb-api.ngrok.io",
       url: `/experience/search?${coordsQuery}&${keywordsQuery}`,
+      baseURL,
     });
 
     if (result.status === 200) {
