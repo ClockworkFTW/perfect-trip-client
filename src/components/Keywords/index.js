@@ -16,7 +16,7 @@ const Keywords = ({ activeKeywords, setActiveKeywords }) => {
           ([key]) => key.includes(query) || activeKeywords.includes(key)
         );
 
-  const onKeywordClicked = (key) => {
+  const toggleKeyword = (key) => {
     if (activeKeywords.includes(key)) {
       setActiveKeywords(activeKeywords.filter((keyword) => keyword !== key));
     } else {
@@ -33,27 +33,32 @@ const Keywords = ({ activeKeywords, setActiveKeywords }) => {
         value={query}
         onChange={setQuery}
       />
-      <Container>
+      <Wrapper>
         {filteredKeywords.map(([key, { text, icon }]) => (
-          <Keyword
-            key={key}
-            prop={key}
-            text={text}
-            icon={icon}
-            isActive={activeKeywords.includes(key)}
-            onClick={onKeywordClicked}
-          />
+          <Container key={key} onClick={() => toggleKeyword(key)}>
+            <Keyword
+              text={text}
+              icon={icon}
+              isActive={activeKeywords.includes(key)}
+            />
+          </Container>
         ))}
-      </Container>
+      </Wrapper>
     </>
   );
 };
 
-const Container = styled.div`
+const Wrapper = styled.div`
   margin-top: 14px;
   display: inline-flex;
   flex-wrap: wrap;
   gap: 12px;
+`;
+
+const Container = styled.div`
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 export default Keywords;

@@ -2,12 +2,8 @@ import styled from "styled-components";
 
 import Icon from "../Icon";
 
-const Keyword = ({ prop, text, icon, isActive, onClick, margin }) => (
-  <Container
-    onClick={() => onClick(prop)}
-    color={isActive ? "green" : "neutral"}
-    margin={margin}
-  >
+const Keyword = ({ text, icon, isActive }) => (
+  <Container color={isActive ? "green" : "neutral"}>
     <Icon
       icon={icon}
       color={isActive ? "green" : "neutral"}
@@ -18,15 +14,12 @@ const Keyword = ({ prop, text, icon, isActive, onClick, margin }) => (
 );
 
 const Container = styled.div`
-  padding: 8px 12px;
+  padding: 6px 12px;
   border-radius: 8px;
   font-weight: 700;
   font-size: 14px;
   color: ${({ theme, color }) => theme[color]["700"]};
   background-color: ${({ theme, color }) => theme[color]["200"]};
-  :hover {
-    cursor: pointer;
-  }
 `;
 
 const Text = styled.span`

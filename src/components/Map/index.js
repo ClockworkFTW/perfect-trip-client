@@ -38,15 +38,6 @@ const Map = ({ coords, setCoords }) => {
     });
   });
 
-  // Handle map move
-  useEffect(() => {
-    if (!map.current) return;
-
-    map.current.on("moveend", () => {
-      // TODO: Get experiences within bounding box
-    });
-  });
-
   // Handle map click
   useEffect(() => {
     if (!map.current) return;

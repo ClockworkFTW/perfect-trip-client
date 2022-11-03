@@ -1,10 +1,5 @@
-import { useEffect, useReducer } from "react";
-
-const initialState = {
-  pending: false,
-  data: null,
-  error: null,
-};
+import { useReducer } from "react";
+import { useDeepCompareEffect } from "react-use";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -19,15 +14,25 @@ const reducer = (state, action) => {
   }
 };
 
-const useApi = (arg, func) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+/**
+ * API hook
+ * @param {function} cb - Callback function
+ * @param {*} init - Initial data state
+ * @param {*} [arg] - Optional argument supplied to callback function
+ * @returns {object} An object containing the result data, pending state and error message
+ */
+const useApi = (cb, init, arg) => {
+  const [state, dispatch] = useReducer(reducer, {
+    data: init,
+    pending: false,
+    error: null,
+  });
 
-  useEffect(() => {
-    const callFn = async () => {
+  useDeepCompareEffect(() => {
+    const callCb = async () => {
       try {
         dispatch({ type: "pending" });
-        const data = await func(arg);
-        console.log(data); // TODO: Remove in prod
+        const data = await cb(arg);
         dispatch({ type: "success", payload: { data } });
       } catch (error) {
         dispatch({ type: "failure", payload: { error } });
@@ -35,9 +40,9 @@ const useApi = (arg, func) => {
     };
 
     if (arg !== "") {
-      callFn();
+      callCb();
     }
-  }, [arg, func]);
+  }, [cb, arg]);
 
   return state;
 };
