@@ -13,7 +13,7 @@ const Search = ({ setCoords }) => {
 
   const [query, setQuery] = useState("");
 
-  const { data: results, pending, error } = useApi(API.getPlaces, [], query);
+  const { data, pending, error } = useApi(API.getPlaces, { places: [] }, query);
 
   const changeHandler = (event) => {
     setQuery(event.target.value);
@@ -46,7 +46,7 @@ const Search = ({ setCoords }) => {
       <SearchResults
         error={error}
         query={query}
-        results={results}
+        results={data.places}
         setCoords={setCoords}
       />
     </Container>

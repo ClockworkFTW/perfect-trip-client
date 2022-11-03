@@ -17,11 +17,11 @@ const TripEditor = () => {
 
   const [keywords, setKeywords] = useState([]);
 
-  const {
-    data: experiences,
-    pending,
-    error,
-  } = useApi(API.getExperiences, [], { coords, keywords });
+  const { data, pending, error } = useApi(
+    API.getExperiences,
+    { experiences: [] },
+    { coords, keywords }
+  );
 
   const [itinerary, setItinerary] = useState({ name: "", experiences: [] });
 
@@ -37,7 +37,7 @@ const TripEditor = () => {
         <Itinerary itinerary={itinerary} setItinerary={setItinerary} />
         <Experiences
           pending={pending}
-          experiences={experiences}
+          experiences={data.experiences}
           addExperienceToItinerary={addExperienceToItinerary}
           keywords={keywords}
           setKeywords={setKeywords}
@@ -46,7 +46,7 @@ const TripEditor = () => {
       <Main>
         <Map
           pending={pending}
-          experiences={experiences}
+          experiences={data.experiences}
           coords={coords}
           setCoords={setCoords}
         />

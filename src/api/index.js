@@ -23,7 +23,7 @@ export const getExperiences = async ({ coords, keywords }) => {
     const { center, northEast, southWest } = coords;
 
     if (!northEast || !southWest) {
-      return [];
+      return { experiences: [] };
     }
 
     const coordsQuery = `c_lat=${center.lat}&c_lng=${center.lng}&ne_lat=${northEast.lat}&ne_lng=${northEast.lng}&sw_lat=${southWest.lat}&sw_lng=${southWest.lng}`;
