@@ -1,10 +1,20 @@
+import { useContext } from "react";
+import { Navigate } from "react-router-dom";
 import styled from "styled-components";
 
+// Context
+import { UserContext } from "../App";
+
 const Profile = () => {
-  return (
+  const [user] = useContext(UserContext);
+
+  return user ? (
     <Container>
       <h1>Profile</h1>
+      <p>Username: {user.username}</p>
     </Container>
+  ) : (
+    <Navigate to="/" />
   );
 };
 

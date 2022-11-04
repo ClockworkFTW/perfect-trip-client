@@ -1,10 +1,17 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+// Components
 import Button from "../components/Button";
 import Icon from "../components/Icon";
 
+// Context
+import { UserContext } from "../App";
+
 const Home = () => {
+  const [user] = useContext(UserContext);
+
   const navigate = useNavigate();
 
   const onCreateTripClicked = () => {
@@ -15,7 +22,7 @@ const Home = () => {
     navigate("/experience/edit/new");
   };
 
-  return (
+  return user ? (
     <Container>
       <h1>Home</h1>
       <div>
@@ -31,13 +38,18 @@ const Home = () => {
         </Button>
       </div>
     </Container>
+  ) : (
+    <Container>
+      <h1>Home</h1>
+      <p>Please register an account to create trips and experiences.</p>
+    </Container>
   );
 };
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 10px 20px;
+  padding: 10px 30px;
 `;
 
 export default Home;

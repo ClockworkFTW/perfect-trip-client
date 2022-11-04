@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 import * as API from "../api";
-import useApi from "../api/useApi";
+import useQuery from "../api/useQuery";
 
 import Itinerary from "../components/Itinerary";
 import Experiences from "../components/Experiences";
@@ -17,7 +17,7 @@ const TripEditor = () => {
 
   const [keywords, setKeywords] = useState([]);
 
-  const { data, pending, error } = useApi(
+  const { data, pending, error } = useQuery(
     API.getExperiences,
     { experiences: [] },
     { coords, keywords }

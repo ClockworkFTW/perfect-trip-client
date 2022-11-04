@@ -1,27 +1,58 @@
 import axios from "axios";
 
-// const baseURL =
-//   process.env.NODE_ENV === "development"
-//     ? "https://jnb-api.ngrok.io"
-//     : "https://perfect-trip.herokuapp.com";
+const prodURL = "https://perfect-trip.herokuapp.com";
+const devURL = "https://jnb-api.ngrok.io";
 
-const baseURL = "https://perfect-trip.herokuapp.com";
+// const baseURL = process.env.NODE_ENV === "production" ? prodURL : devURL;
+const baseURL = prodURL;
 
-export const getPlaces = async (query) => {
+export const register = async ({ credentials }) => {
   try {
     const result = await axios({
-      method: "get",
-      url: `/places/?query=${query}`,
       baseURL,
+      url: `/auth/register`,
+      method: "post",
+      data: credentials,
     });
 
     if (result.status === 200) {
       return result.data;
     }
-
-    console.log(result);
   } catch (error) {
-    console.log(error);
+    throw error.response.data;
+  }
+};
+
+export const login = async ({ credentials }) => {
+  try {
+    const result = await axios({
+      baseURL,
+      url: `/auth/login`,
+      method: "post",
+      data: credentials,
+    });
+
+    if (result.status === 200) {
+      return result.data;
+    }
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const getPlaces = async (query) => {
+  try {
+    const result = await axios({
+      baseURL,
+      url: `/places/?query=${query}`,
+      method: "get",
+    });
+
+    if (result.status === 200) {
+      return result.data;
+    }
+  } catch (error) {
+    throw error.response.data;
   }
 };
 
@@ -37,17 +68,15 @@ export const getExperiences = async ({ coords, keywords }) => {
     const keywordsQuery = `keywords=${keywords.join()}`;
 
     const result = await axios({
-      method: "get",
-      url: `/experience/search?${coordsQuery}&${keywordsQuery}`,
       baseURL,
+      url: `/experience/search?${coordsQuery}&${keywordsQuery}`,
+      method: "get",
     });
 
     if (result.status === 200) {
       return result.data;
     }
-
-    console.log(result);
   } catch (error) {
-    console.log(error);
+    throw error.response.data;
   }
 };

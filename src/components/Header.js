@@ -1,9 +1,16 @@
+import { useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
+// Components
 import Button from "./Button";
 
+// Context
+import { UserContext } from "../App";
+
 const Header = ({ headerRef }) => {
+  const [user, setUser] = useContext(UserContext);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,15 +24,27 @@ const Header = ({ headerRef }) => {
     navigate("/login");
   };
 
+  const onLogoutClicked = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
+
   return (
     <Wrapper ref={headerRef}>
       <Container maxWidth={maxWidth}>
         <Group>
           <Logo to="/">Perfect Trip</Logo>
         </Group>
-        <Group>
-          <Button onClick={onLoginClicked}>Login</Button>
-        </Group>
+        {user ? (
+          <Group>
+            <Username to={`/profile/${user.userId}`}>{user.username}</Username>
+            <Button onClick={onLogoutClicked}>Logout</Button>
+          </Group>
+        ) : (
+          <Group>
+            <Button onClick={onLoginClicked}>Login</Button>
+          </Group>
+        )}
       </Container>
     </Wrapper>
   );
@@ -46,6 +65,10 @@ const Container = styled.nav`
 `;
 
 const Group = styled.div``;
+
+const Username = styled(Link)`
+  margin-right: 8px;
+`;
 
 const Logo = styled(Link)`
   color: ${({ theme }) => theme.neutral["700"]};

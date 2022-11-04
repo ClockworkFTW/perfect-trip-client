@@ -3,7 +3,7 @@ import debounce from "lodash.debounce";
 import styled from "styled-components";
 
 import * as API from "../../../api";
-import useApi from "../../../api/useApi";
+import useQuery from "../../../api/useQuery";
 
 import SearchBar from "./SearchBar";
 import SearchResults from "./SearchResults";
@@ -13,7 +13,11 @@ const Search = ({ setCoords }) => {
 
   const [query, setQuery] = useState("");
 
-  const { data, pending, error } = useApi(API.getPlaces, { places: [] }, query);
+  const { data, pending, error } = useQuery(
+    API.getPlaces,
+    { places: [] },
+    query
+  );
 
   const changeHandler = (event) => {
     setQuery(event.target.value);

@@ -21,7 +21,7 @@ const reducer = (state, action) => {
  * @param {*} [arg] - Optional argument supplied to callback function
  * @returns {object} An object containing the result data, pending state and error message
  */
-const useApi = (cb, init, arg) => {
+const useQuery = (cb, init, arg) => {
   const [state, dispatch] = useReducer(reducer, {
     data: init,
     pending: false,
@@ -47,4 +47,4 @@ const useApi = (cb, init, arg) => {
   return state;
 };
 
-export default useApi;
+export default useQuery;
