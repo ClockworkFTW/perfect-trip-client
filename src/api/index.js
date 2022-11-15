@@ -3,7 +3,8 @@ import axios from "axios";
 const prodURL = "https://perfect-trip.herokuapp.com";
 const devURL = "http://127.0.0.1:5000";
 
-const baseURL = process.env.NODE_ENV === "production" ? prodURL : devURL;
+// const baseURL = process.env.NODE_ENV === "production" ? prodURL : devURL;
+const baseURL = prodURL;
 
 const getAuthHeader = () => {
   const token = localStorage.getItem("token");
