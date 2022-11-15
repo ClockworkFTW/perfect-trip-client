@@ -1,10 +1,18 @@
 import axios from "axios";
 
 const prodURL = "https://perfect-trip.herokuapp.com";
-const devURL = "https://jnb-api.ngrok.io";
+const devURL = "http://127.0.0.1:5000";
 
-// const baseURL = process.env.NODE_ENV === "production" ? prodURL : devURL;
-const baseURL = prodURL;
+const baseURL = process.env.NODE_ENV === "production" ? prodURL : devURL;
+
+const getAuthHeader = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    return { Authorization: `Bearer ${token}` };
+  } else {
+    return {};
+  }
+};
 
 export const register = async ({ credentials }) => {
   try {
@@ -15,9 +23,7 @@ export const register = async ({ credentials }) => {
       data: credentials,
     });
 
-    if (result.status === 200) {
-      return result.data;
-    }
+    return result.data;
   } catch (error) {
     throw error.response.data;
   }
@@ -32,9 +38,7 @@ export const login = async ({ credentials }) => {
       data: credentials,
     });
 
-    if (result.status === 200) {
-      return result.data;
-    }
+    return result.data;
   } catch (error) {
     throw error.response.data;
   }
@@ -48,9 +52,7 @@ export const getPlaces = async (query) => {
       method: "get",
     });
 
-    if (result.status === 200) {
-      return result.data;
-    }
+    return result.data;
   } catch (error) {
     throw error.response.data;
   }
@@ -73,9 +75,23 @@ export const getExperiences = async ({ coords, keywords }) => {
       method: "get",
     });
 
-    if (result.status === 200) {
-      return result.data;
-    }
+    return result.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const createExperience = async ({ experience }) => {
+  try {
+    const result = await axios({
+      baseURL,
+      url: `/experience/`,
+      method: "post",
+      data: experience,
+      headers: getAuthHeader(),
+    });
+
+    return result.data;
   } catch (error) {
     throw error.response.data;
   }
