@@ -1,12 +1,20 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
+import styled from "styled-components";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 
-import MarkerIcon from "./MarkerIcon";
+// Config
+import { MAPBOX_ACCESS_TOKEN } from "../../config";
 
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+// Components
+import Search from "./Search";
+import MarkerIcon from "./Marker/MarkerIcon";
+import MarkerLocation from "./Marker/MarkerLocation";
 
-const Map = ({ coords, setCoords }) => {
+mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
+
+const ExperienceMap = ({ latitude, longitude, setCoordinates }) => {
+  // Element references
   const mapContainer = useRef(null);
   const map = useRef(null);
   const markerContainer = useRef(null);
@@ -16,14 +24,12 @@ const Map = ({ coords, setCoords }) => {
   useEffect(() => {
     if (map.current) return;
 
-    const { lat, lng } = coords;
-
     // Initialize map
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v11",
       projection: "globe",
-      center: [lng, lat],
+      center: [longitude, latitude],
       zoom: 12,
     });
 
@@ -33,7 +39,7 @@ const Map = ({ coords, setCoords }) => {
       markerContainer.current = document.createElement("div");
       ReactDOM.createRoot(markerContainer.current).render(<MarkerIcon />);
       marker.current = new mapboxgl.Marker(markerContainer.current)
-        .setLngLat([coords.lng, coords.lat])
+        .setLngLat([longitude, latitude])
         .addTo(map.current);
     });
   });
@@ -42,11 +48,11 @@ const Map = ({ coords, setCoords }) => {
   useEffect(() => {
     if (!map.current) return;
 
-    // Update coords
+    // Update coordinates
     map.current.on("click", (e) => {
       const lat = e.lngLat.lat.toFixed(4);
       const lng = e.lngLat.lng.toFixed(4);
-      setCoords({ lat, lng });
+      setCoordinates({ lat, lng });
     });
   });
 
@@ -55,22 +61,32 @@ const Map = ({ coords, setCoords }) => {
     if (!map.current || !marker.current) return;
 
     // Update marker coords
-    const { lat, lng } = coords;
-    marker.current.setLngLat([lng, lat]);
+    marker.current.setLngLat([longitude, latitude]);
 
     // Fly to coords
     let zoom = map.current.getZoom();
     zoom = zoom > 12 ? zoom : 12;
-    map.current.flyTo({ center: [lng, lat], zoom });
-  }, [coords]);
+    map.current.flyTo({ center: [longitude, latitude], zoom });
+  }, [latitude, longitude]);
 
   return (
-    <div
-      ref={mapContainer}
-      style={{ width: "100%", height: "100%" }}
-      className="map-container"
-    />
+    <Wrapper>
+      <Container ref={mapContainer} className="map-container" />
+      <Search setCoordinates={setCoordinates} />
+      <MarkerLocation latitude={latitude} longitude={longitude} />
+    </Wrapper>
   );
 };
 
-export default Map;
+const Wrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+export default ExperienceMap;

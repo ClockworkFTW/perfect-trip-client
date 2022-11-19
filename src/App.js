@@ -12,7 +12,6 @@ import Register from "./pages/Register";
 import TripList from "./pages/TripList";
 import TripView from "./pages/TripView";
 import TripEditor from "./pages/TripEditor";
-import ExperienceList from "./pages/ExperienceList";
 import ExperienceView from "./pages/ExperienceView";
 import ExperienceEditor from "./pages/ExperienceEditor";
 import Profile from "./pages/Profile";
@@ -52,7 +51,6 @@ const Router = () => (
         <Route path=":edit/:tripId" element={<TripEditor />} />
       </Route>
       <Route path="experience">
-        <Route index element={<ExperienceList />} />
         <Route path=":experienceId" element={<ExperienceView />} />
         <Route path=":edit/:experienceId" element={<ExperienceEditor />} />
       </Route>

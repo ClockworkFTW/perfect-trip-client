@@ -1,15 +1,15 @@
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { Navigate, Link as A } from "react-router-dom";
 import styled from "styled-components";
 import jwtDecode from "jwt-decode";
 
 // API
 import * as API from "../api";
-import useMutation from "../api/useMutation";
 
 // Components
 import Topography from "../components/Topography";
 import Button from "../components/Button";
+import Error from "../components/Error";
 import Label from "../components/Label";
 import Input from "../components/Input";
 import Icon from "../components/Icon";
@@ -18,42 +18,47 @@ import Icon from "../components/Icon";
 import { UserContext } from "../App";
 
 const Login = () => {
+  // User context
   const [user, setUser] = useContext(UserContext);
 
+  // API loading and error state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Form state
   // TODO: Move to child component to stop unnecessary renders
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [passwordA, setPasswordA] = useState("");
   const [passwordB, setPasswordB] = useState("");
 
-  const [
-    register,
-    {
-      data: { token },
-      pending,
-      error,
-    },
-  ] = useMutation(API.register, {
-    token: null,
-  });
+  // Handle registration
+  const onRegisterClicked = async () => {
+    try {
+      // Build credentials object
+      const credentials = {
+        email,
+        username,
+        passwordA,
+        passwordB,
+      };
 
-  const onRegisterClicked = () => {
-    const credentials = {
-      email,
-      username,
-      passwordA,
-      passwordB,
-    };
-    register({ credentials });
-  };
+      // Login with credentials
+      setLoading(true);
+      const result = await API.register({ credentials });
 
-  useEffect(() => {
-    if (token) {
-      localStorage.setItem("token", token);
-      const payload = jwtDecode(token);
-      setUser({ ...payload, token });
+      // Save token to local storage
+      localStorage.setItem("token", result);
+      const payload = jwtDecode(result);
+
+      // Update user context
+      setUser({ ...payload, result });
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
     }
-  }, [token]);
+  };
 
   return user ? (
     <Navigate to="/" replace={true} />
@@ -62,12 +67,7 @@ const Login = () => {
       <Topography />
       <Container>
         <Header>Hello There, Traveler!</Header>
-        {error && (
-          <Error>
-            <Icon icon="warning" margin="0 12px 0 0" />
-            {error}
-          </Error>
-        )}
+        {error && <Error error={error} />}
         <Field>
           <Label id="email" text="Email">
             <Icon icon="envelope" color="neutral" shade="500" />
@@ -119,7 +119,7 @@ const Login = () => {
           />
         </Field>
         <Button onClick={onRegisterClicked} width="100%">
-          {pending ? "Loading..." : "Register"}
+          {loading ? "Loading..." : "Register"}
         </Button>
         <Footer>
           Already have an account? <Link to="/login">Login now</Link>.
@@ -150,15 +150,6 @@ const Header = styled.h1`
   font-family: "Lilita One", cursive;
   font-size: 32px;
   text-align: center;
-`;
-
-const Error = styled.div`
-  margin-bottom: 20px;
-  padding: 12px 14px;
-  border-radius: 8px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.white};
-  background-color: ${({ theme }) => theme.red["500"]};
 `;
 
 const Field = styled.div`

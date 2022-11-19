@@ -7,7 +7,7 @@ import Experience from "./Experience";
 
 const Experiences = (props) => {
   const {
-    pending,
+    loading,
     experiences,
     addExperienceToItinerary,
     keywords,
@@ -23,7 +23,7 @@ const Experiences = (props) => {
   return (
     <Wrapper>
       <Menu
-        pending={pending}
+        loading={loading}
         query={query}
         setQuery={setQuery}
         menuRef={menuRef}
@@ -32,12 +32,12 @@ const Experiences = (props) => {
         setKeywords={setKeywords}
       />
       <Container menuHeight={menuHeight}>
-        {pending && experiences.length === 0 ? (
+        {loading && experiences.length === 0 ? (
           <Loader>Loading...</Loader>
         ) : (
           experiences
             .filter((experience) =>
-              experience.name.toLowerCase().includes(query)
+              experience.title.toLowerCase().includes(query)
             )
             .map((experience) => (
               <Experience

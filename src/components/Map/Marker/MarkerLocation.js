@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-import Icon from "../Icon";
+import Icon from "../../Icon";
 
-const MarkerLocation = ({ coords }) => (
+const MarkerLocation = ({ latitude, longitude }) => (
   <Container>
     <Icon icon="location" color="green" shade="500" margin="0 8px 0 0" />
-    {`${coords.lat}, ${coords.lng}`}
+    {`${latitude}, ${longitude}`}
   </Container>
 );
 

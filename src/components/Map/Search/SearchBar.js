@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import Icon from "../../Icon";
 
-const SearchBar = ({ queryRef, pending, onChange, resetQuery }) => (
+const SearchBar = ({ queryRef, loading, onChange, resetSearch }) => (
   <Container>
     <Icon icon="magnifying-glass" color="neutral" shade={400} />
     <Input
@@ -11,10 +11,10 @@ const SearchBar = ({ queryRef, pending, onChange, resetQuery }) => (
       placeholder="Search places..."
       onChange={onChange}
     />
-    {pending ? (
+    {loading ? (
       <Icon icon="spinner" color="neutral" shade={400} />
     ) : (
-      <Button onClick={resetQuery}>
+      <Button onClick={resetSearch}>
         <Icon icon="times" color="neutral" shade={400} />
       </Button>
     )}
