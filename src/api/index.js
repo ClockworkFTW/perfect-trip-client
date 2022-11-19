@@ -4,7 +4,7 @@ const prodURL = "https://perfect-trip.herokuapp.com";
 const devURL = "http://127.0.0.1:5000";
 
 // const baseURL = process.env.NODE_ENV === "production" ? prodURL : devURL;
-const baseURL = prodURL;
+const baseURL = devURL;
 
 const getAuthHeader = () => {
   const token = localStorage.getItem("token");
@@ -30,6 +30,7 @@ export const register = async ({ credentials }) => {
   }
 };
 
+
 export const login = async ({ credentials }) => {
   try {
     const result = await axios({
@@ -37,6 +38,38 @@ export const login = async ({ credentials }) => {
       url: `/auth/login`,
       method: "post",
       data: credentials,
+    });
+
+    return result.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const updateUsername = async ({ avatar }) => {
+  try {
+    const result = await axios({
+      baseURL,
+      url: `/user/update/user`,
+      method: "post",
+      data: avatar,
+      headers: getAuthHeader(),
+    });
+
+    return result.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const updatePassword = async ({ credentials }) => {
+  try {
+    const result = await axios({
+      baseURL,
+      url: `/user/update/pass`,
+      method: "post",
+      data: credentials,
+      headers: getAuthHeader(),
     });
 
     return result.data;
