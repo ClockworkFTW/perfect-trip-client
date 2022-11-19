@@ -1,11 +1,10 @@
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import styled from "styled-components";
 import jwtDecode from "jwt-decode";
 
 // API
 import * as API from "../api";
-import useMutation from "../api/useMutation";
 
 // components
 import Topography from "../components/Topography";
@@ -20,57 +19,61 @@ import { UserContext } from "../App";
 const Profile = () => {
   const [user, setUser] = useContext(UserContext);
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const [password, setPassword] = useState("");
   const [passwordA, setPasswordA] = useState("");
   const [passwordB, setPasswordB] = useState("");
   const [username, setUsername] = useState("");
+  const [passwordD, setPasswordD] = useState("");
 
-  const [
-    updateUsername,
-    {
-      data: { token },
-      pending,
-      error,
-    },
-  ] = useMutation(API.updateUsername, {
-    token: null,
-  });
 
-  const onUpdateUserClicked = () => {
-    const avatar = {
-      username
-    };
-    updateUsername({ avatar });
-  };
+  const onUpdateUserClicked = async () => {
+    try {
+      const data = { username };
+      setLoading(true);
+      const result = await API.updateUsername({ data });
 
-  useEffect(() => {
-    if (token) {
-      localStorage.setItem("token", token);
-      const payload = jwtDecode(token);
-      setUser({ ...payload, token });
+      localStorage.setItem("token", result);
+      const payload = jwtDecode(result);
+
+      setUser({ ...payload, result });
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
     }
-  }, [token]);
-
-  const [
-    updatePassword,
-    {
-      data: { pass },
-      pendingPass,
-      errorPass,
-    },
-  ] = useMutation(API.updatePassword, {
-    pass: null,
-  });
-
-  const onUpdatePassClicked = () => {
-    const credentials = {
-      password,
-      passwordA,
-      passwordB
-    };
-    updatePassword({ credentials }).then(resp => console.log(resp))
   };
 
+  const onUpdatePassClicked = async () => {
+    try {
+      const passwords = { password, passwordA, passwordB };
+      setLoading(true);
+      const result = await API.updatePassword({ passwords });
+      const messageP = document.getElementById("message");
+      console.log(result)
+      messageP.innerText = result;
+
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onDeleteClicked = async () => {
+    try {
+      const deletePass = { passwordD };
+      setLoading(true);
+      const result = await API.deleteAccount({ deletePass });
+      setUser(null)
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return user ? (
       <Wrapper>
@@ -90,7 +93,7 @@ const Profile = () => {
             />
           </Field>
           <Button onClick={onUpdateUserClicked} width="100%">
-            {pending ? "Loading..." : "Update"}
+            {loading ? "Loading..." : "Update Username"}
           </Button>
         </Container>
         <Container>
@@ -135,8 +138,28 @@ const Profile = () => {
             />
           </Field>
           <Button onClick={onUpdatePassClicked} width="100%">
-            {pendingPass ? "Loading..." : "Update"}
+            {loading ? "Loading..." : "Update Password"}
           </Button>
+          <p id="message" style={{ textAlign: 'center', fontSize: '20px'}} ></p>
+      </Container>
+      <Container>
+        <h3>Delete Account</h3>
+        <Field>
+          <Label id="password" text="Current Password">
+            <Icon icon="lock-keyhole" color="neutral" shade="500" />
+          </Label>
+          <Input
+            id="passwordD"
+            type="password"
+            label="Password"
+            placeholder="password"
+            value={passwordD}
+            onChange={setPasswordD}
+          />
+        </Field>
+        <Button onClick={onDeleteClicked} width="100%">
+          {loading ? "Loading..." : "Delete Account"}
+        </Button>
       </Container>
     </Wrapper>
   ) : (

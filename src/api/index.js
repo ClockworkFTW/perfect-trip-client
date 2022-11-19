@@ -4,7 +4,7 @@ const prodURL = "https://perfect-trip.herokuapp.com";
 const devURL = "http://127.0.0.1:5000";
 
 // const baseURL = process.env.NODE_ENV === "production" ? prodURL : devURL;
-const baseURL = devURL;
+const API_URL = devURL;
 
 const getAuthHeader = () => {
   const token = localStorage.getItem("token");
@@ -46,35 +46,51 @@ export const login = async ({ credentials }) => {
   }
 };
 
-export const updateUsername = async ({ avatar }) => {
+export const updateUsername = async ({ data }) => {
   try {
     const result = await axios({
-      baseURL,
+      baseURL: API_URL,
       url: `/user/update/user`,
       method: "post",
-      data: avatar,
+      data: data,
       headers: getAuthHeader(),
     });
 
-    return result.data;
+    return result.data.token;
   } catch (error) {
-    throw error.response.data;
+    throw error.response.data.message;
   }
 };
 
-export const updatePassword = async ({ credentials }) => {
+export const updatePassword = async ({ passwords }) => {
   try {
     const result = await axios({
-      baseURL,
+      baseURL: API_URL,
       url: `/user/update/pass`,
       method: "post",
-      data: credentials,
+      data: passwords,
       headers: getAuthHeader(),
     });
 
-    return result.data;
+    return result.data.message;
   } catch (error) {
-    throw error.response.data;
+    return error.response.data.message;
+  }
+};
+
+export const deleteAccount = async ({ deletePass }) => {
+  try {
+    const result = await axios({
+      baseURL: API_URL,
+      url: `/user/delete`,
+      method: "post",
+      data: deletePass,
+      headers: getAuthHeader(),
+    });
+
+    return result.data.message;
+  } catch (error) {
+    throw error.response.data.message;
   }
 };
 
@@ -161,8 +177,8 @@ export const deleteExperience = async ({ experienceId }) => {
   try {
     const result = await axios({
       baseURL: API_URL,
-      url: `/experience/${experienceId}`,
-      method: "delete",
+      url: `/experience/delete`,
+      method: "post",
       headers: getAuthHeader(),
     });
 
