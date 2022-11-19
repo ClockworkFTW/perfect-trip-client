@@ -1,45 +1,52 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { keywords } from "../../config";
+// Config
+import { KEYWORDS } from "../../config";
 
+// Components
 import Input from "../Input";
 import Keyword from "./Keyword";
 
-const Keywords = ({ activeKeywords, setActiveKeywords }) => {
+const Keywords = ({ keywords, addKeyword, removeKeyword }) => {
   const [query, setQuery] = useState("");
 
-  const filteredKeywords =
-    query === ""
-      ? Object.entries(keywords).filter(([key]) => activeKeywords.includes(key))
-      : Object.entries(keywords).filter(
-          ([key]) => key.includes(query) || activeKeywords.includes(key)
-        );
-
-  const toggleKeyword = (key) => {
-    if (activeKeywords.includes(key)) {
-      setActiveKeywords(activeKeywords.filter((keyword) => keyword !== key));
+  const filterKeywords = () => {
+    if (query === "") {
+      return Object.entries(KEYWORDS).filter(([keyword]) =>
+        keywords.includes(keyword)
+      );
     } else {
-      setActiveKeywords([...activeKeywords, key]);
-      setQuery("");
+      return Object.entries(KEYWORDS).filter(
+        ([keyword]) => keyword.includes(query) || keywords.includes(keyword)
+      );
+    }
+  };
+
+  const toggleKeyword = (keyword) => {
+    if (keywords.includes(keyword)) {
+      removeKeyword(keyword);
+    } else {
+      addKeyword(keyword);
     }
   };
 
   return (
     <>
       <Input
+        id="keywords"
         type="text"
         placeholder="Search keywords..."
         value={query}
         onChange={setQuery}
       />
       <Wrapper>
-        {filteredKeywords.map(([key, { text, icon }]) => (
-          <Container key={key} onClick={() => toggleKeyword(key)}>
+        {filterKeywords().map(([keyword, { text, icon }]) => (
+          <Container key={keyword} onClick={() => toggleKeyword(keyword)}>
             <Keyword
               text={text}
               icon={icon}
-              isActive={activeKeywords.includes(key)}
+              isActive={keywords.includes(keyword)}
             />
           </Container>
         ))}

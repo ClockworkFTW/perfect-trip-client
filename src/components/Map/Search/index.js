@@ -1,57 +1,68 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import debounce from "lodash.debounce";
 import styled from "styled-components";
 
+// API
 import * as API from "../../../api";
-import useQuery from "../../../api/useQuery";
 
+// Components
 import SearchBar from "./SearchBar";
 import SearchResults from "./SearchResults";
 
-const Search = ({ setCoords }) => {
+const Search = ({ setCoordinates }) => {
   const queryRef = useRef();
 
-  const [query, setQuery] = useState("");
+  // Places state
+  const [places, setPlaces] = useState([]);
 
-  const { data, pending, error } = useQuery(
-    API.getPlaces,
-    { places: [] },
-    query
-  );
+  // API loading and error state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const changeHandler = (event) => {
-    setQuery(event.target.value);
+  // Get places
+  const changeHandler = async (event) => {
+    try {
+      setLoading(true);
+      const result = await API.getPlaces({ query: event.target.value });
+      setPlaces(result);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Debounce change handler by 500ms
   const debouncedChangeHandler = useMemo(
     () => debounce(changeHandler, 500),
     []
   );
 
+  // Clean up debounce change handler
   useEffect(() => {
     return () => {
       debouncedChangeHandler.cancel();
     };
   }, []);
 
-  const resetQuery = () => {
-    setQuery("");
+  // Reset query input and places
+  const resetSearch = () => {
     queryRef.current.value = "";
+    setPlaces([]);
   };
 
   return (
     <Container>
       <SearchBar
-        pending={pending}
         queryRef={queryRef}
-        resetQuery={resetQuery}
+        loading={loading}
         onChange={debouncedChangeHandler}
+        resetSearch={resetSearch}
       />
       <SearchResults
         error={error}
-        query={query}
-        results={data.places}
-        setCoords={setCoords}
+        places={places}
+        setCoordinates={setCoordinates}
       />
     </Container>
   );

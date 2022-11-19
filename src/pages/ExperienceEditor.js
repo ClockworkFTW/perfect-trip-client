@@ -1,126 +1,210 @@
-import { useState } from "react";
+import { useEffect, useReducer, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 // API
 import * as API from "../api";
-import useQuery from "../api/useQuery";
-import useMutation from "../api/useMutation";
 
 // Components
-import Map from "../components/Map";
-import SearchPlaces from "../components/Map/Search";
-import MarkerLocation from "../components/Map/MarkerLocation";
-import Icon from "../components/Icon";
-import Label from "../components/Label";
+import Field from "../components/Field";
 import Input from "../components/Input";
 import TextArea from "../components/TextArea";
-import Button from "../components/Button";
 import Keywords from "../components/Keywords";
-import Photos from "../components/Photos";
+import Images from "../components/Images";
+import Button from "../components/Button";
+import Error from "../components/Error";
+import ExperienceMap from "../components/Map/ExperienceMap";
 
-// Utilities
-import { getBase64 } from "../util";
+// Reducer
+const experienceReducer = (state, action) => {
+  switch (action.type) {
+    case "INIT_EXPERIENCE": {
+      return action.payload;
+    }
+    case "SET_TITLE": {
+      return { ...state, title: action.payload };
+    }
+    case "SET_DESCRIPTION": {
+      return { ...state, description: action.payload };
+    }
+    case "SET_COORDINATES": {
+      const { lat, lng } = action.payload;
+      return { ...state, latitude: lat, longitude: lng };
+    }
+    case "ADD_KEYWORD": {
+      const keywords = [...state.keywords, action.payload];
+      return { ...state, keywords };
+    }
+    case "REMOVE_KEYWORD": {
+      const keywords = state.keywords.filter(
+        (keyword) => keyword !== action.payload
+      );
+      return { ...state, keywords };
+    }
+    case "ADD_IMAGES": {
+      const images = [...state.images, ...action.payload];
+      return { ...state, images };
+    }
+    case "REMOVE_IMAGE": {
+      const images = state.images.filter((image) => image !== action.payload);
+      return { ...state, images };
+    }
+    default: {
+      return state;
+    }
+  }
+};
 
 const ExperienceEditor = () => {
-  const [coords, setCoords] = useState({ lat: 37.7749, lng: -122.4194 });
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [keywords, setKeywords] = useState([]);
-  const [photos, setPhotos] = useState([]);
+  // Router hooks
+  const { experienceId } = useParams();
+  const navigate = useNavigate();
 
-  const [
-    createExperience,
-    {
-      data: { experience },
-      pending,
-      error,
-    },
-  ] = useMutation(API.createExperience, {
-    experience: null,
+  // API loading and error state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Experience state
+  const [experience, dispatch] = useReducer(experienceReducer, {
+    title: "",
+    description: "",
+    latitude: 37.7749,
+    longitude: -122.4194,
+    keywords: [],
+    images: [],
   });
 
-  const onSaveClicked = async () => {
-    // Convert photos to base64 strings
-    const photoStrings = await Promise.all(
-      photos.map(async (photo) => await getBase64(photo))
-    );
+  // Action Creators
+  const setTitle = (title) => {
+    dispatch({ type: "SET_TITLE", payload: title });
+  };
+  const setDescription = (description) => {
+    dispatch({ type: "SET_DESCRIPTION", payload: description });
+  };
+  const setCoordinates = (coordinates) => {
+    dispatch({ type: "SET_COORDINATES", payload: coordinates });
+  };
+  const addKeyword = (keyword) => {
+    dispatch({ type: "ADD_KEYWORD", payload: keyword });
+  };
+  const removeKeyword = (keyword) => {
+    dispatch({ type: "REMOVE_KEYWORD", payload: keyword });
+  };
+  const addImages = (images) => {
+    dispatch({ type: "ADD_IMAGES", payload: images });
+  };
+  const removeImage = (images) => {
+    dispatch({ type: "REMOVE_IMAGE", payload: images });
+  };
 
-    const experience = {
-      title,
-      description,
-      keywords,
-      latitude: coords.lat,
-      longitude: coords.lng,
-      startDate: null,
-      endDate: null,
-      images: photoStrings,
+  // Initialize experience on page load
+  useEffect(() => {
+    const initExperience = async () => {
+      try {
+        setLoading(true);
+        const result = await API.getExperience({ experienceId });
+        dispatch({ type: "INIT_EXPERIENCE", payload: result });
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
     };
-    createExperience({ experience });
+
+    if (experienceId !== "new") {
+      initExperience();
+    }
+  }, [experienceId]);
+
+  // Handle experience creation and updates
+  const onSaveClicked = async () => {
+    if (experienceId !== "new") {
+      try {
+        setLoading(true);
+        const result = await API.updateExperience({ experience });
+        navigate(`/experience/${result.id}`, { state: { experience: result } });
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      try {
+        setLoading(true);
+        const result = await API.createExperience({ experience });
+        navigate(`/experience/${result.id}`, { state: { experience: result } });
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  // Handle experience deletion
+  const onDeleteClicked = async () => {
+    try {
+      setLoading(true);
+      await API.deleteExperience({ experienceId });
+      navigate(`/`);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Container>
       <Sidebar>
-        <Field>
-          <Label id="title" text="Title">
-            {title === "" ? (
-              <Icon icon="circle" color="neutral" shade="300" />
-            ) : (
-              <Icon icon="circle-check" color="green" shade="500" />
-            )}
-          </Label>
+        {error && <Error error={error} />}
+        <Field id="title" isValid={experience.title.length}>
           <Input
             id="title"
             type="text"
             placeholder="Title"
-            value={title}
+            value={experience.title}
             onChange={setTitle}
           />
         </Field>
-        <Field>
-          <Label id="description" text="Description">
-            {description === "" ? (
-              <Icon icon="circle" color="neutral" shade="300" />
-            ) : (
-              <Icon icon="circle-check" color="green" shade="500" />
-            )}
-          </Label>
+        <Field id="description" isValid={experience.description.length}>
           <TextArea
             id="description"
             type="text"
             placeholder="Description"
-            value={description}
+            value={experience.description}
             onChange={setDescription}
           />
         </Field>
-        <Field>
-          <Label id="keywords" text="Keywords">
-            {keywords.length === 0 ? (
-              <Icon icon="circle" color="neutral" shade="300" />
-            ) : (
-              <Icon icon="circle-check" color="green" shade="500" />
-            )}
-          </Label>
-          <Keywords activeKeywords={keywords} setActiveKeywords={setKeywords} />
+        <Field id="keywords" isValid={experience.keywords.length}>
+          <Keywords
+            keywords={experience.keywords}
+            addKeyword={addKeyword}
+            removeKeyword={removeKeyword}
+          />
         </Field>
-        <Field>
-          <Label id="photos" text="Photos">
-            {photos.length === 0 ? (
-              <Icon icon="circle" color="neutral" shade="300" />
-            ) : (
-              <Icon icon="circle-check" color="green" shade="500" />
-            )}
-          </Label>
-          <Photos photos={photos} setPhotos={setPhotos} />
+        <Field id="images" isValid={experience.images.length}>
+          <Images
+            images={experience.images}
+            addImages={addImages}
+            removeImage={removeImage}
+          />
         </Field>
         <Button width="100%" onClick={onSaveClicked}>
-          Save
+          {loading ? "Loading..." : "Save"}
         </Button>
+        {experienceId !== "new" && (
+          <Button width="100%" onClick={onDeleteClicked}>
+            {loading ? "Loading..." : "Delete"}
+          </Button>
+        )}
       </Sidebar>
       <Main>
-        <Map coords={coords} setCoords={setCoords} />
-        <SearchPlaces setCoords={setCoords} />
-        <MarkerLocation coords={coords} />
+        <ExperienceMap
+          latitude={experience.latitude}
+          longitude={experience.longitude}
+          setCoordinates={setCoordinates}
+        />
       </Main>
     </Container>
   );
@@ -139,10 +223,6 @@ const Sidebar = styled.div`
 
 const Main = styled.div`
   position: relative;
-`;
-
-const Field = styled.div`
-  margin-bottom: 20px;
 `;
 
 export default ExperienceEditor;

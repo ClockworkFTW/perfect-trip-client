@@ -3,21 +3,23 @@ import ReactDOM from "react-dom/client";
 import styled from "styled-components";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 
+// Config
+import { MAPBOX_ACCESS_TOKEN } from "../../config";
+
+// Components
 import Search from "./Search";
-import MarkerIcon from "./MarkerIcon";
+import MarkerIcon from "./Marker/MarkerIcon";
 
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+// Utilities
+import { roundCoords } from "../../util";
 
-const roundCoords = ({ lat, lng }) => ({
-  lat: lat.toFixed(4),
-  lng: lng.toFixed(4),
-});
+mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
 
-const Map = ({ coords, setCoords, experiences }) => {
+const TripMap = ({ experiences, latitude, longitude, setCoordinates }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
 
-  const [searchCoords, setSearchCoords] = useState(coords.center);
+  const [searchCoordinates, setSearchCoordinates] = useState();
   const [markers, setMarkers] = useState([]);
 
   // Handle initialization
@@ -27,7 +29,7 @@ const Map = ({ coords, setCoords, experiences }) => {
     // Initialize map
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      center: [coords.center.lng, coords.center.lat],
+      center: [longitude, latitude],
       style: "mapbox://styles/mapbox/streets-v11",
       projection: "globe",
       zoom: 12,
@@ -49,11 +51,11 @@ const Map = ({ coords, setCoords, experiences }) => {
     const eventListener = () => {
       const center = roundCoords(map.current.getCenter());
 
-      if (JSON.stringify(center) !== JSON.stringify(coords.center)) {
+      if (center.latitude !== latitude && center.longitude !== longitude) {
         const bounds = map.current.getBounds();
         const northEast = roundCoords(bounds._ne);
         const southWest = roundCoords(bounds._sw);
-        setCoords({ center, northEast, southWest });
+        setCoordinates({ center, northEast, southWest });
       }
     };
 
@@ -71,16 +73,16 @@ const Map = ({ coords, setCoords, experiences }) => {
     if (!map.current) return;
 
     // Get bounding box and update coordinates
-    const center = roundCoords(searchCoords);
+    const center = searchCoordinates;
     const bounds = map.current.getBounds();
     const northEast = roundCoords(bounds._ne);
     const southWest = roundCoords(bounds._sw);
-    setCoords({ center, northEast, southWest });
+    setCoordinates({ center, northEast, southWest });
 
     // Update map zoom and fly to center
     const zoom = map.current.getZoom() > 12 ? map.current.getZoom() : 12;
-    map.current.flyTo({ center: [center.lng, center.lat], zoom });
-  }, [searchCoords]);
+    map.current.flyTo({ center, zoom });
+  }, [searchCoordinates]);
 
   // Create markers
   useEffect(() => {
@@ -105,7 +107,7 @@ const Map = ({ coords, setCoords, experiences }) => {
 
       // Create a Mapbox Marker at new DOM node
       const marker = new mapboxgl.Marker(ref.current);
-      marker.setLngLat([experience.coords.lng, experience.coords.lat]);
+      marker.setLngLat([experience.longitude, experience.latitude]);
       marker.addTo(map.current);
       newMarkers.push(marker);
     });
@@ -117,7 +119,7 @@ const Map = ({ coords, setCoords, experiences }) => {
   return (
     <Wrapper>
       <Container ref={mapContainer} className="map-container" />
-      <Search setCoords={setSearchCoords} />
+      <Search setCoordinates={setSearchCoordinates} />
     </Wrapper>
   );
 };
@@ -133,4 +135,4 @@ const Container = styled.div`
   height: 100%;
 `;
 
-export default Map;
+export default TripMap;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { keywords } from "../../../config";
+import { KEYWORDS } from "../../../config";
 
 import Icon from "../../Icon";
 import Keyword from "../../Keywords/Keyword";
@@ -28,7 +28,7 @@ const Filter = ({ menuHeight, activeKeywords, setActiveKeywords }) => {
       </Button>
       {isOpen && (
         <List menuHeight={menuHeight}>
-          {Object.entries(keywords).map(([key, { text, icon }]) => (
+          {Object.entries(KEYWORDS).map(([key, { text, icon }]) => (
             <Item key={key} onClick={() => onKeywordClicked(key)}>
               <Keyword
                 text={text}

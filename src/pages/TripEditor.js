@@ -1,28 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import * as API from "../api";
-import useQuery from "../api/useQuery";
 
 import Itinerary from "../components/Itinerary";
 import Experiences from "../components/Experiences";
-import Map from "../components/Map/Test";
+import TripMap from "../components/Map/TripMap";
 
 const TripEditor = () => {
-  const [coords, setCoords] = useState({
-    center: { lat: 37.7749, lng: -122.4194 },
+  // API loading and error state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Experience list state
+  const [experiences, setExperiences] = useState([]);
+
+  // Experience filter state
+  const [keywords, setKeywords] = useState([]);
+  const [coordinates, setCoordinates] = useState({
+    center: { latitude: 37.7749, longitude: -122.4194 },
     northEast: null,
     southWest: null,
   });
 
-  const [keywords, setKeywords] = useState([]);
+  // Initialize experience on page load
+  useEffect(() => {
+    const getExperiences = async () => {
+      try {
+        setLoading(true);
+        const result = await API.searchExperiences({ keywords, coordinates });
+        setExperiences(result);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const { data, pending, error } = useQuery(
-    API.getExperiences,
-    { experiences: [] },
-    { coords, keywords }
-  );
+    if (coordinates.northEast && coordinates.southWest) {
+      getExperiences();
+    }
+  }, [keywords, coordinates]);
 
+  // Itinerary state
   const [itinerary, setItinerary] = useState({ name: "", experiences: [] });
 
   const addExperienceToItinerary = (experience) =>
@@ -31,24 +51,27 @@ const TripEditor = () => {
       experiences: [...itinerary.experiences, experience],
     });
 
+  console.log(experiences);
+
   return (
     <Container>
       <Sidebar>
         <Itinerary itinerary={itinerary} setItinerary={setItinerary} />
         <Experiences
-          pending={pending}
-          experiences={data.experiences}
+          loading={loading}
+          experiences={experiences}
           addExperienceToItinerary={addExperienceToItinerary}
           keywords={keywords}
           setKeywords={setKeywords}
         />
       </Sidebar>
       <Main>
-        <Map
-          pending={pending}
-          experiences={data.experiences}
-          coords={coords}
-          setCoords={setCoords}
+        <TripMap
+          loading={loading}
+          experiences={experiences}
+          latitude={coordinates.center.latitude}
+          longitude={coordinates.center.longitude}
+          setCoordinates={setCoordinates}
         />
       </Main>
     </Container>

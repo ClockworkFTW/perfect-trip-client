@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { keywords } from "../../config";
+import { KEYWORDS } from "../../config";
 
 import Icon from "../Icon";
 import Flag from "../Flag";
@@ -9,22 +9,22 @@ import Keyword from "../Keywords/Keyword";
 import Button from "../Button";
 
 const Experience = ({ experience, addExperienceToItinerary }) => {
-  const { name, description, rating, photos, country, country_code } =
+  const { title, description, rating, images, country, country_code } =
     experience;
 
-  const keyword = keywords[experience.keywords[0]];
+  const keyword = KEYWORDS[experience.keywords[0]];
 
   return (
     <Container>
-      <Photo url={photos[0]}>
+      <Image url={images[0]}>
         <Country>
           <Flag code={country_code} margin="0 8px 0 0" />
           {country}
         </Country>
-      </Photo>
+      </Image>
       <Content>
         <Banner>
-          <Name>{name}</Name>
+          <Name>{title}</Name>
           <Rating rating={rating} />
         </Banner>
         <Description>{description}</Description>
@@ -47,7 +47,7 @@ const Container = styled.div`
   margin-bottom: 20px;
 `;
 
-const Photo = styled.div`
+const Image = styled.div`
   position: relative;
   width: 100%;
   height: 100%;

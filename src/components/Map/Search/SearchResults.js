@@ -2,16 +2,16 @@ import styled from "styled-components";
 
 import Flag from "../../Flag";
 
-const SearchResults = ({ query, results, error, setCoords }) =>
-  query !== "" && results ? (
+const SearchResults = ({ places, error, setCoordinates }) =>
+  places.length ? (
     <Container>
       <List>
-        {results.map((result) => (
-          <Item key={result.id} onClick={() => setCoords(result.coords)}>
-            <Flag code={result.country_code} margin="0 8px 0 0" />
-            {result.name}
-            {result.city && `, ${result.city}`}
-            {result.country && `, ${result.country}`}
+        {places.map((place) => (
+          <Item key={place.id} onClick={() => setCoordinates(place.coords)}>
+            <Flag code={place.country_code} margin="0 8px 0 0" />
+            {place.name}
+            {place.city && `, ${place.city}`}
+            {place.country && `, ${place.country}`}
           </Item>
         ))}
       </List>

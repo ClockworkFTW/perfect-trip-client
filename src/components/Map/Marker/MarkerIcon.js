@@ -1,6 +1,6 @@
-import { keywords } from "../../config";
+import { KEYWORDS } from "../../../config";
 
-import Icon from "../Icon";
+import Icon from "../../Icon";
 
 const styleParent = {
   position: "relative",
@@ -21,8 +21,8 @@ const MarkerIcon = ({ experience = { keywords: [] } }) => {
   const icons = [];
 
   experience.keywords.forEach((keyword) => {
-    if (keyword in keywords) {
-      icons.push(keywords[keyword].icon);
+    if (keyword in KEYWORDS) {
+      icons.push(KEYWORDS[keyword].icon);
     }
   });
 
