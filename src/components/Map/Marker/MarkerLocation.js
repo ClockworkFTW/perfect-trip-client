@@ -10,9 +10,6 @@ const MarkerLocation = ({ latitude, longitude }) => (
 );
 
 const Container = styled.div`
-  position: absolute;
-  top: 30px;
-  right: 30px;
   display: flex;
   align-items: center;
   padding: 12px 14px;

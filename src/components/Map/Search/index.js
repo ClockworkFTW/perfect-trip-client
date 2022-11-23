@@ -9,7 +9,7 @@ import * as API from "../../../api";
 import SearchBar from "./SearchBar";
 import SearchResults from "./SearchResults";
 
-const Search = ({ setCoordinates }) => {
+const Search = ({ darkMode = false, width = "100%", setCoordinates }) => {
   const queryRef = useRef();
 
   // Places state
@@ -45,34 +45,41 @@ const Search = ({ setCoordinates }) => {
     };
   }, []);
 
-  // Reset query input and places
+  // Handle place selection
+  const selectPlace = ({ name, lat, lng }) => {
+    setCoordinates({ lat, lng });
+    queryRef.current.value = name;
+    setPlaces([]);
+  };
+
+  // Handle searchbar reset
   const resetSearch = () => {
     queryRef.current.value = "";
     setPlaces([]);
   };
 
   return (
-    <Container>
+    <Container width={width}>
       <SearchBar
+        darkMode={darkMode}
         queryRef={queryRef}
         loading={loading}
         onChange={debouncedChangeHandler}
         resetSearch={resetSearch}
       />
       <SearchResults
-        error={error}
+        darkMode={darkMode}
         places={places}
-        setCoordinates={setCoordinates}
+        selectPlace={selectPlace}
+        error={error}
       />
     </Container>
   );
 };
 
 const Container = styled.div`
-  position: absolute;
-  top: 30px;
-  left: 30px;
-  width: 400px;
+  position: relative;
+  width: ${({ width }) => width};
 `;
 
 export default Search;

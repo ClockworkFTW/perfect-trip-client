@@ -133,7 +133,13 @@ const TripMap = ({ experiences, latitude, longitude, setCoordinates }) => {
   return (
     <Wrapper>
       <Container ref={mapContainer} className="map-container" />
-      <Search setCoordinates={setSearchCoordinates} />
+      <Banner>
+        <Search
+          darkMode={true}
+          width="400px"
+          setCoordinates={setSearchCoordinates}
+        />
+      </Banner>
     </Wrapper>
   );
 };
@@ -147,6 +153,15 @@ const Wrapper = styled.div`
 const Container = styled.div`
   width: 100%;
   height: 100%;
+`;
+
+const Banner = styled.div`
+  position: absolute;
+  left: 30px;
+  top: 30px;
+  right: 30px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export default TripMap;
