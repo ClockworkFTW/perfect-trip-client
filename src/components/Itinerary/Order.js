@@ -20,8 +20,8 @@ const Order = ({ index, color, removeEvent }) => {
 };
 
 const Container = styled.div`
+  flex: 1 0 auto;
   position: relative;
-  display: inline-block;
   font-size: 34px;
   :hover {
     cursor: pointer;

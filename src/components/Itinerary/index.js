@@ -79,6 +79,7 @@ const Itinerary = (props) => {
                           key={event.id}
                           event={event}
                           removeEvent={removeEvent}
+                          setEventTime={setEventTime}
                           color="green"
                         />
                       ))
@@ -132,6 +133,7 @@ const Itinerary = (props) => {
                             key={event.id}
                             event={event}
                             removeEvent={removeEvent}
+                            setEventTime={setEventTime}
                             color={day.color}
                           />
                         ))

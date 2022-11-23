@@ -11,7 +11,7 @@ import Keyword from "../Keywords/Keyword";
 import { KEYWORDS } from "../../config";
 
 const Event = ({ event, removeEvent, setEventTime, color }) => {
-  const { id, index, experience, time } = event;
+  const { id, index, experience, date, time } = event;
 
   const keyword = KEYWORDS[experience.keywords[0]];
 
@@ -24,27 +24,33 @@ const Event = ({ event, removeEvent, setEventTime, color }) => {
           {...provided.dragHandleProps}
           isDragging={snapshot.isDragging}
         >
-          <Banner>
-            <Banner>
-              <Order
-                index={index}
-                removeEvent={() => removeEvent({ id })}
+          <Header>
+            <Order
+              index={index}
+              removeEvent={() => removeEvent({ id })}
+              color={color}
+            />
+            <Title isDragging={snapshot.isDragging}>{experience.title}</Title>
+            {date && (
+              <Time
+                id={id}
+                date={date}
+                time={time}
+                setEventTime={setEventTime}
                 color={color}
               />
-              <Title isDragging={snapshot.isDragging}>{experience.title}</Title>
-            </Banner>
-            <Time time={time} setEventTime={setEventTime} color={color} />
-          </Banner>
+            )}
+          </Header>
           <Main>
             <Image url={experience.images[0]} />
             <Content>
               <Description isDragging={snapshot.isDragging}>
                 {experience.description}
               </Description>
-              <Banner>
+              <Footer>
                 <Keyword text={keyword.text} icon={keyword.icon} />
                 <Rating rating={experience.rating} />
-              </Banner>
+              </Footer>
             </Content>
           </Main>
         </Container>
@@ -63,18 +69,28 @@ const Container = styled.div`
     isDragging ? theme.white : theme.neutral["800"]};
 `;
 
-const Banner = styled.div`
+const Header = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const Footer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
 const Title = styled.h1`
-  margin-left: 10px;
+  flex: 100%;
+  margin: 0 10px;
   font-size: 20px;
   font-weight: 700;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
   color: ${({ theme, isDragging }) =>
-    isDragging ? theme.white : theme.neutral["800"]};
+    isDragging ? theme.white : theme.neutral["700"]};
 `;
 
 const Main = styled.div`

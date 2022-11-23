@@ -136,11 +136,15 @@ const tripReducer = (state, action) => {
     }
 
     case "SET_EVENT_TIME": {
-      const { experienceId, time } = action.payload;
+      const { id, time } = action.payload;
 
-      const itinerary = state.itinerary.map((event) =>
-        event.experience.id === experienceId ? { ...event, time } : event
-      );
+      const itinerary = state.itinerary.map((event) => {
+        if (event.id === id) {
+          return { ...event, time };
+        } else {
+          return event;
+        }
+      });
 
       return { ...state, itinerary };
     }
