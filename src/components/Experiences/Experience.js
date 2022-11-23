@@ -8,7 +8,7 @@ import Rating from "../Rating";
 import Keyword from "../Keywords/Keyword";
 import Button from "../Button";
 
-const Experience = ({ experience, addExperienceToItinerary }) => {
+const Experience = ({ experience, addEvent }) => {
   const { title, description, rating, images, country, country_code } =
     experience;
 
@@ -30,7 +30,7 @@ const Experience = ({ experience, addExperienceToItinerary }) => {
         <Description>{description}</Description>
         <Banner>
           <Keyword text={keyword.text} icon={keyword.icon} />
-          <Button onClick={() => addExperienceToItinerary(experience)}>
+          <Button onClick={() => addEvent({ experience })}>
             <Icon icon="plus" />
           </Button>
         </Banner>

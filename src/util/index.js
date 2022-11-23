@@ -8,6 +8,6 @@ export const getBase64 = (file) => {
 };
 
 export const roundCoords = ({ lat, lng }) => ({
-  latitude: lat.toFixed(4),
-  longitude: lng.toFixed(4),
+  latitude: parseFloat(lat.toFixed(4)),
+  longitude: parseFloat(lng.toFixed(4)),
 });

@@ -135,3 +135,17 @@ export const deleteExperience = async ({ experienceId }) => {
     throw error.response.data.message;
   }
 };
+
+export const getTrip = async ({ tripId }) => {
+  try {
+    const result = await axios({
+      baseURL: API_URL,
+      url: `/trip/${tripId}`,
+      method: "get",
+    });
+
+    return result.data.trip;
+  } catch (error) {
+    throw error.response.data.message;
+  }
+};

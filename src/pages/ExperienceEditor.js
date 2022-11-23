@@ -22,31 +22,33 @@ const experienceReducer = (state, action) => {
       return action.payload;
     }
     case "SET_TITLE": {
-      return { ...state, title: action.payload };
+      return { ...state, title: action.payload.title };
     }
     case "SET_DESCRIPTION": {
-      return { ...state, description: action.payload };
+      return { ...state, description: action.payload.description };
     }
     case "SET_COORDINATES": {
-      const { lat, lng } = action.payload;
+      const { lat, lng } = action.payload.coordinates;
       return { ...state, latitude: lat, longitude: lng };
     }
     case "ADD_KEYWORD": {
-      const keywords = [...state.keywords, action.payload];
+      const keywords = [...state.keywords, action.payload.keyword];
       return { ...state, keywords };
     }
     case "REMOVE_KEYWORD": {
       const keywords = state.keywords.filter(
-        (keyword) => keyword !== action.payload
+        (keyword) => keyword !== action.payload.keyword
       );
       return { ...state, keywords };
     }
     case "ADD_IMAGES": {
-      const images = [...state.images, ...action.payload];
+      const images = [...state.images, ...action.payload.images];
       return { ...state, images };
     }
     case "REMOVE_IMAGE": {
-      const images = state.images.filter((image) => image !== action.payload);
+      const images = state.images.filter(
+        (image) => image !== action.payload.image
+      );
       return { ...state, images };
     }
     default: {
@@ -76,25 +78,25 @@ const ExperienceEditor = () => {
 
   // Action Creators
   const setTitle = (title) => {
-    dispatch({ type: "SET_TITLE", payload: title });
+    dispatch({ type: "SET_TITLE", payload: { title } });
   };
   const setDescription = (description) => {
-    dispatch({ type: "SET_DESCRIPTION", payload: description });
+    dispatch({ type: "SET_DESCRIPTION", payload: { description } });
   };
   const setCoordinates = (coordinates) => {
-    dispatch({ type: "SET_COORDINATES", payload: coordinates });
+    dispatch({ type: "SET_COORDINATES", payload: { coordinates } });
   };
   const addKeyword = (keyword) => {
-    dispatch({ type: "ADD_KEYWORD", payload: keyword });
+    dispatch({ type: "ADD_KEYWORD", payload: { keyword } });
   };
   const removeKeyword = (keyword) => {
-    dispatch({ type: "REMOVE_KEYWORD", payload: keyword });
+    dispatch({ type: "REMOVE_KEYWORD", payload: { keyword } });
   };
   const addImages = (images) => {
-    dispatch({ type: "ADD_IMAGES", payload: images });
+    dispatch({ type: "ADD_IMAGES", payload: { images } });
   };
   const removeImage = (images) => {
-    dispatch({ type: "REMOVE_IMAGE", payload: images });
+    dispatch({ type: "REMOVE_IMAGE", payload: { images } });
   };
 
   // Initialize experience on page load

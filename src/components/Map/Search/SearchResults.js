@@ -7,9 +7,17 @@ const SearchResults = ({ places, error, setCoordinates }) =>
     <Container>
       <List>
         {places.map((place) => (
-          <Item key={place.id} onClick={() => setCoordinates(place.coords)}>
+          <Item
+            key={place.id}
+            onClick={() =>
+              setCoordinates({
+                lat: place.latitude,
+                lng: place.longitude,
+              })
+            }
+          >
             <Flag code={place.country_code} margin="0 8px 0 0" />
-            {place.name}
+            {place.title}
             {place.city && `, ${place.city}`}
             {place.country && `, ${place.country}`}
           </Item>
