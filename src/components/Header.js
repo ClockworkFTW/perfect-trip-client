@@ -11,6 +11,14 @@ import { UserContext } from "../App";
 const Header = ({ headerRef }) => {
   const [user, setUser] = useContext(UserContext);
 
+  const onCreateTripClicked = () => {
+    navigate("/trip/edit/new");
+  };
+
+  const onCreateExperienceClicked = () => {
+    navigate("/experience/edit/new");
+  };
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -35,6 +43,18 @@ const Header = ({ headerRef }) => {
         <Group>
           <Logo to="/">Perfect Trip</Logo>
         </Group>
+        {user ? (
+          <Group>
+            <Button onClick={onCreateTripClicked}>
+              Plan New Trip
+            </Button>
+            <button style={{visibility:"hidden"}}>
+            </button>
+            <Button onClick={onCreateExperienceClicked}>
+              Create New Experience
+            </Button>
+          </Group>
+        ) : (<p/>)}
         {user ? (
           <Group>
             <Username to={`/profile/${user.userId}`}>{user.username}</Username>
