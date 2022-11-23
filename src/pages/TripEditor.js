@@ -223,7 +223,7 @@ const TripEditor = () => {
   // Experience filter state
   const [keywords, setKeywords] = useState(["tourist_attraction"]);
   const [coordinates, setCoordinates] = useState({
-    center: { latitude: 37.7749, longitude: -122.4194 },
+    center: { latitude: 48.8566, longitude: 2.3522 },
     northEast: null,
     southWest: null,
   });

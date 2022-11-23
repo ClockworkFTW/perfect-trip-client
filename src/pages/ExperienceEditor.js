@@ -70,8 +70,8 @@ const ExperienceEditor = () => {
   const [experience, dispatch] = useReducer(experienceReducer, {
     title: "",
     description: "",
-    latitude: 37.7749,
-    longitude: -122.4194,
+    latitude: 48.8566,
+    longitude: 2.3522,
     keywords: [],
     images: [],
   });
