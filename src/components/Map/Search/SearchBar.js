@@ -2,10 +2,11 @@ import styled from "styled-components";
 
 import Icon from "../../Icon";
 
-const SearchBar = ({ queryRef, loading, onChange, resetSearch }) => (
-  <Container>
+const SearchBar = ({ darkMode, queryRef, loading, onChange, resetSearch }) => (
+  <Container darkMode={darkMode}>
     <Icon icon="magnifying-glass" color="neutral" shade={400} />
     <Input
+      darkMode={darkMode}
       ref={queryRef}
       type="text"
       placeholder="Search places..."
@@ -27,8 +28,8 @@ const Container = styled.div`
   align-items: center;
   padding: 12px 14px;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.neutral["800"]};
-  box-shadow: ${({ theme }) => theme.shadow_lg};
+  background-color: ${({ theme, darkMode }) =>
+    darkMode ? theme.neutral["800"] : theme.white};
 `;
 
 const Input = styled.input`
@@ -37,7 +38,8 @@ const Input = styled.input`
   border: none;
   outline: none;
   background: none;
-  color: ${({ theme }) => theme.white};
+  color: ${({ theme, darkMode }) =>
+    darkMode ? theme.white : theme.neutral["800"]};
   ::placeholder {
     color: ${({ theme }) => theme.neutral["400"]};
   }

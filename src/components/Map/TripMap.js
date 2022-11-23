@@ -19,7 +19,7 @@ const TripMap = ({ experiences, latitude, longitude, setCoordinates }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
 
-  const [searchCoordinates, setSearchCoordinates] = useState();
+  const [searchCoordinates, setSearchCoordinates] = useState(null);
   const [markers, setMarkers] = useState([]);
 
   // Handle initialization
@@ -39,6 +39,13 @@ const TripMap = ({ experiences, latitude, longitude, setCoordinates }) => {
     map.current.on("style.load", () => {
       map.current.setFog({});
     });
+
+    // Initialize coordinates
+    const center = { latitude, longitude };
+    const bounds = map.current.getBounds();
+    const northEast = roundCoords(bounds._ne);
+    const southWest = roundCoords(bounds._sw);
+    setCoordinates({ center, northEast, southWest });
   });
 
   // Handle map move
@@ -70,18 +77,25 @@ const TripMap = ({ experiences, latitude, longitude, setCoordinates }) => {
 
   // Handle search coordinates update
   useEffect(() => {
-    if (!map.current) return;
+    if (!map.current || !searchCoordinates) return;
 
     // Get bounding box and update coordinates
-    const center = searchCoordinates;
+    const { lat, lng } = searchCoordinates;
+
+    // TODO: Extrapolate bounds
     const bounds = map.current.getBounds();
     const northEast = roundCoords(bounds._ne);
     const southWest = roundCoords(bounds._sw);
-    setCoordinates({ center, northEast, southWest });
+
+    setCoordinates({
+      center: { latitude: lat, longitude: lng },
+      northEast,
+      southWest,
+    });
 
     // Update map zoom and fly to center
     const zoom = map.current.getZoom() > 12 ? map.current.getZoom() : 12;
-    map.current.flyTo({ center, zoom });
+    map.current.flyTo({ center: [lng, lat], zoom });
   }, [searchCoordinates]);
 
   // Create markers
@@ -119,7 +133,13 @@ const TripMap = ({ experiences, latitude, longitude, setCoordinates }) => {
   return (
     <Wrapper>
       <Container ref={mapContainer} className="map-container" />
-      <Search setCoordinates={setSearchCoordinates} />
+      <Banner>
+        <Search
+          darkMode={true}
+          width="400px"
+          setCoordinates={setSearchCoordinates}
+        />
+      </Banner>
     </Wrapper>
   );
 };
@@ -133,6 +153,15 @@ const Wrapper = styled.div`
 const Container = styled.div`
   width: 100%;
   height: 100%;
+`;
+
+const Banner = styled.div`
+  position: absolute;
+  left: 30px;
+  top: 30px;
+  right: 30px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export default TripMap;

@@ -2,32 +2,49 @@ import styled from "styled-components";
 
 import Flag from "../../Flag";
 
-const SearchResults = ({ places, error, setCoordinates }) =>
+const SearchResults = ({ darkMode, places, selectPlace, error }) =>
   places.length ? (
-    <Container>
+    <Container darkMode={darkMode}>
       <List>
-        {places.map((place) => (
-          <Item key={place.id} onClick={() => setCoordinates(place.coords)}>
-            <Flag code={place.country_code} margin="0 8px 0 0" />
-            {place.name}
-            {place.city && `, ${place.city}`}
-            {place.country && `, ${place.country}`}
-          </Item>
-        ))}
+        {places.map((place) => {
+          // Extract values
+          const { id, title, city, country, country_code } = place;
+
+          // Extract coordinates
+          const lat = place.latitude;
+          const lng = place.longitude;
+
+          // Build name string
+          const name = `${title}${city ? `, ${city}` : ""}${
+            country ? `, ${country}` : ""
+          }`;
+
+          return (
+            <Item key={id} onClick={() => selectPlace({ name, lat, lng })}>
+              <Flag code={country_code} margin="0 8px 0 0" />
+              {name}
+            </Item>
+          );
+        })}
       </List>
     </Container>
   ) : null;
 
 const Container = styled.div`
-  margin-top: 10px;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.neutral["800"]};
-  box-shadow: ${({ theme }) => theme.shadow_lg};
+  color: ${({ theme, darkMode }) =>
+    darkMode ? theme.neutral["400"] : theme.neutral["800"]};
+  background-color: ${({ theme, darkMode }) =>
+    darkMode ? theme.neutral["800"] : theme.white};
 `;
 
 const List = styled.ul`
   overflow: hidden;
-  margin: 12px 14px;
+  margin: 0 14px;
   padding: 0;
 `;
 
@@ -36,7 +53,6 @@ const Item = styled.li`
   align-items: center;
   margin: 10px 0;
   white-space: nowrap;
-  color: ${({ theme }) => theme.neutral["400"]};
   :hover {
     cursor: pointer;
     color: ${({ theme }) => theme.green["500"]};

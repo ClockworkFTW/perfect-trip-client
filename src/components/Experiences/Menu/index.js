@@ -26,7 +26,7 @@ const Wrapper = styled.div``;
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 20px 20px 0 20px;
+  padding: 20px;
 `;
 
 export default Menu;

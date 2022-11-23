@@ -6,13 +6,7 @@ import Menu from "./Menu";
 import Experience from "./Experience";
 
 const Experiences = (props) => {
-  const {
-    loading,
-    experiences,
-    addExperienceToItinerary,
-    keywords,
-    setKeywords,
-  } = props;
+  const { loading, experiences, addEvent, keywords, setKeywords } = props;
 
   // Calculate menu height
   const [menuRef, { height: menuHeight }] = useMeasure();
@@ -43,7 +37,7 @@ const Experiences = (props) => {
               <Experience
                 key={experience.id}
                 experience={experience}
-                addExperienceToItinerary={addExperienceToItinerary}
+                addEvent={addEvent}
               />
             ))
         )}
@@ -65,8 +59,11 @@ const Container = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  padding: 20px;
+  padding: 0 20px;
   overflow-y: scroll;
+  ::-webkit-scrollbar {
+    width: 0 !important;
+  }
 `;
 
 const Loader = styled.div`

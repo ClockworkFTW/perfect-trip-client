@@ -1,10 +1,6 @@
 import axios from "axios";
 
-const prodURL = "https://perfect-trip.herokuapp.com";
-const devURL = "http://127.0.0.1:5000";
-
-// const baseURL = process.env.NODE_ENV === "production" ? prodURL : devURL;
-const API_URL = devURL;
+import { API_URL } from "../config";
 
 const getAuthHeader = () => {
   const token = localStorage.getItem("token");
@@ -29,7 +25,6 @@ export const register = async ({ credentials }) => {
     throw error.response.data.message;
   }
 };
-
 
 export const login = async ({ credentials }) => {
   try {
@@ -94,7 +89,7 @@ export const deleteAccount = async ({ deletePass }) => {
   }
 };
 
-export const getPlaces = async (query) => {
+export const getPlaces = async ({ query }) => {
   try {
     const result = await axios({
       baseURL: API_URL,
@@ -183,6 +178,20 @@ export const deleteExperience = async ({ experienceId }) => {
     });
 
     return result.data.experienceId;
+  } catch (error) {
+    throw error.response.data.message;
+  }
+};
+
+export const getTrip = async ({ tripId }) => {
+  try {
+    const result = await axios({
+      baseURL: API_URL,
+      url: `/trip/${tripId}`,
+      method: "get",
+    });
+
+    return result.data.trip;
   } catch (error) {
     throw error.response.data.message;
   }

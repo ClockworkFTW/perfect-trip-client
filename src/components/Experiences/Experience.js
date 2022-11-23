@@ -8,7 +8,7 @@ import Rating from "../Rating";
 import Keyword from "../Keywords/Keyword";
 import Button from "../Button";
 
-const Experience = ({ experience, addExperienceToItinerary }) => {
+const Experience = ({ experience, addEvent }) => {
   const { title, description, rating, images, country, country_code } =
     experience;
 
@@ -25,14 +25,16 @@ const Experience = ({ experience, addExperienceToItinerary }) => {
       <Content>
         <Banner>
           <Name>{title}</Name>
-          <Rating rating={rating} />
-        </Banner>
-        <Description>{description}</Description>
-        <Banner>
-          <Keyword text={keyword.text} icon={keyword.icon} />
-          <Button onClick={() => addExperienceToItinerary(experience)}>
+          <Button onClick={() => addEvent({ experience })}>
             <Icon icon="plus" />
           </Button>
+        </Banner>
+        <Description>
+          {description ? description : "No description..."}
+        </Description>
+        <Banner>
+          <Keyword text={keyword.text} icon={keyword.icon} />
+          <Rating rating={rating} />
         </Banner>
       </Content>
     </Container>
@@ -41,10 +43,18 @@ const Experience = ({ experience, addExperienceToItinerary }) => {
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 160px 1fr;
-  grid-template-rows: 120px;
+  grid-template-columns: 160px 280px;
+  grid-template-rows: 130px;
   gap: 20px;
+  padding: 10px;
+  border-radius: 8px;
   margin-bottom: 20px;
+  background-color: white;
+  transition: box-shadow 0.2s ease-in-out;
+  :hover {
+    cursor: pointer;
+    box-shadow: ${({ theme }) => theme.shadow_lg};
+  }
 `;
 
 const Image = styled.div`
@@ -84,8 +94,12 @@ const Banner = styled.div`
 `;
 
 const Name = styled.h1`
+  margin-right: 10px;
   font-size: 20px;
   font-weight: 700;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
   color: ${({ theme }) => theme.neutral["700"]};
 `;
 
