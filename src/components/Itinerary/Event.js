@@ -45,7 +45,9 @@ const Event = ({ event, removeEvent, setEventTime, color }) => {
             <Image url={experience.images[0]} />
             <Content>
               <Description isDragging={snapshot.isDragging}>
-                {experience.description}
+                {experience.description
+                  ? experience.description
+                  : "No description..."}
               </Description>
               <Footer>
                 <Keyword text={keyword.text} icon={keyword.icon} />
@@ -67,6 +69,10 @@ const Container = styled.div`
     isDragging ? theme.neutral["800"] : theme.white};
   color: ${({ theme, isDragging }) =>
     isDragging ? theme.white : theme.neutral["800"]};
+  transition: box-shadow 0.2s ease-in-out;
+  :hover {
+    box-shadow: ${({ theme }) => theme.shadow_lg};
+  }
 `;
 
 const Header = styled.div`
