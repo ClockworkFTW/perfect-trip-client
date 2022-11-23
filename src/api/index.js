@@ -30,7 +30,6 @@ export const register = async ({ credentials }) => {
   }
 };
 
-
 export const login = async ({ credentials }) => {
   try {
     const result = await axios({
@@ -94,7 +93,7 @@ export const deleteAccount = async ({ deletePass }) => {
   }
 };
 
-export const getPlaces = async (query) => {
+export const getPlaces = async ({ query }) => {
   try {
     const result = await axios({
       baseURL: API_URL,
