@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useReducer ,useContext } from "react";
 import { Navigate } from "react-router-dom";
 import styled from "styled-components";
 import jwtDecode from "jwt-decode";
@@ -12,6 +12,7 @@ import Button from "../components/Button";
 import Label from "../components/Label";
 import Input from "../components/Input";
 import Icon from "../components/Icon";
+import Image from "../components/Image"
 
 // Context
 import { UserContext } from "../App";
@@ -27,6 +28,7 @@ const Profile = () => {
   const [passwordB, setPasswordB] = useState("");
   const [username, setUsername] = useState("");
   const [passwordD, setPasswordD] = useState("");
+  const [avatar, setAvatar] = useState("");
 
 
   const onUpdateUserClicked = async () => {
@@ -34,10 +36,23 @@ const Profile = () => {
       const data = { username };
       setLoading(true);
       const result = await API.updateUsername({ data });
-
       localStorage.setItem("token", result);
       const payload = jwtDecode(result);
+      setUser({ ...payload, result });
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const onUpdateAvatarClicked = async () => {
+    try {
+      const data = { avatar };
+      setLoading(true);
+      const result = await API.updateAvatar({ data });
+      localStorage.setItem("token", result);
+      const payload = jwtDecode(result);
       setUser({ ...payload, result });
     } catch (error) {
       setError(error);
@@ -52,9 +67,7 @@ const Profile = () => {
       setLoading(true);
       const result = await API.updatePassword({ passwords });
       const messageP = document.getElementById("message");
-      console.log(result)
       messageP.innerText = result;
-
     } catch (error) {
       setError(error);
     } finally {
@@ -73,6 +86,15 @@ const Profile = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const addImage = (image) => {
+    console.log(image)
+    setAvatar(image);
+  };
+
+  const removeImage = () => {
+    setAvatar("");
   };
 
   return user ? (
@@ -94,6 +116,22 @@ const Profile = () => {
           </Field>
           <Button onClick={onUpdateUserClicked} width="100%">
             {loading ? "Loading..." : "Update Username"}
+          </Button>
+        </Container>
+        <Container>
+          <h3>Change Avatar</h3>
+          <Field id="images">
+            <Label id="avatar" text="Avatar">
+              <Icon icon="user" color="neutral" shade="500" />
+            </Label>
+            <Image
+              imageA={avatar}
+              addImage={addImage}
+              removeImage={removeImage}
+            />
+          </Field>
+          <Button onClick={onUpdateAvatarClicked} width="100%">
+            {loading ? "Loading..." : "Update Avatar"}
           </Button>
         </Container>
         <Container>

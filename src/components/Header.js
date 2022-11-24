@@ -30,6 +30,7 @@ const Header = ({ headerRef }) => {
         </Group>
         {user ? (
           <Group>
+            <Image src={user.avatar}/>
             <Username to={`/profile/${user.userId}`}>{user.username}</Username>
             <Button onClick={onLogoutClicked}>Logout</Button>
           </Group>
@@ -57,7 +58,8 @@ const Container = styled.nav`
   padding: 10px 30px;
 `;
 
-const Group = styled.div``;
+const Group = styled.div`
+`;
 
 const Username = styled(Link)`
   margin-right: 8px;
@@ -68,5 +70,16 @@ const Logo = styled(Link)`
   font-family: "Lilita One", cursive;
   font-size: 32px;
 `;
+
+const Image = styled.img`
+display: inline-block;
+margin-bottom: -15px;
+margin-right: 12px;
+padding: 0;
+aspect-ratio: 1 / 1;
+width: 40px;
+border-radius: 8px;
+background-color: ${({ theme }) => theme.white};`
+
 
 export default Header;
