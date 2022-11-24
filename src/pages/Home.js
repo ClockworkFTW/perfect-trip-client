@@ -80,13 +80,13 @@ const Home = () => {
 const Container = styled.div`
   height: 100%;
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 520px 1fr;
 `;
 
 const Sidebar = styled.div`
   height: 100%;
   display: grid;
-  grid-template-columns: 320px;
+  grid-template-columns: 520px;
 `;
 
 const Main = styled.div`

@@ -57,6 +57,22 @@ export const updateUsername = async ({ data }) => {
   }
 };
 
+export const updateAvatar = async ({ data }) => {
+  try {
+    const result = await axios({
+      baseURL: API_URL,
+      url: `/user/update/avatar`,
+      method: "post",
+      data: data,
+      headers: getAuthHeader(),
+    });
+
+    return result.data.token;
+  } catch (error) {
+    throw error.response.data.message;
+  }
+};
+
 export const updatePassword = async ({ passwords }) => {
   try {
     const result = await axios({
