@@ -8,15 +8,10 @@ import Event from "./Event";
 
 const colors = ["blue", "violet", "emerald", "rose", "amber", "cyan", "red"];
 
-const Itinerary = (props) => {
-  const {
-    startDate,
-    endDate,
-    itinerary,
-    moveEvent,
-    removeEvent,
-    setEventTime,
-  } = props;
+const Itinerary = ({ actions, trip, saveTrip }) => {
+  // Extract props
+  const { startDate, endDate, itinerary } = trip;
+  const { moveEvent, removeEvent, setEventTime } = actions;
 
   // Get trip days
   const days = [...Array(dayjs(endDate).diff(startDate, "day"))].map((_, i) => {
@@ -55,6 +50,7 @@ const Itinerary = (props) => {
   return (
     <Wrapper>
       <Container>
+        <button onClick={saveTrip}>SAVE</button>
         <DragDropContext onDragEnd={onDragEnd}>
           <div>
             <Header>

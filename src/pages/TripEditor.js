@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
@@ -15,14 +15,8 @@ import Search from "../components/Map/Search";
 import Input from "../components/Input";
 import Field from "../components/Field";
 
-// Initial state
-const INITIAL_STATE = {
-  name: "",
-  note: "",
-  startDate: null,
-  endDate: null,
-  itinerary: [],
-};
+// Context
+import { UserContext } from "../App";
 
 // Reducer logic
 const tripReducer = (state, action) => {
@@ -168,6 +162,9 @@ const tripReducer = (state, action) => {
 };
 
 const TripEditor = () => {
+  // User context
+  const [user] = useContext(UserContext);
+
   // Router hooks
   const { tripId } = useParams();
   const navigate = useNavigate();
@@ -209,7 +206,7 @@ const TripEditor = () => {
 
   // Initialize trip on page load
   useEffect(() => {
-    const initTrip = async () => {
+    const getTrip = async () => {
       try {
         setLoading(true);
         const result = await API.getTrip({ tripId });
@@ -221,24 +218,75 @@ const TripEditor = () => {
       }
     };
 
+    // Initialize new trip
     if (tripId === "new") {
-      dispatch({ type: "INIT_TRIP", payload: INITIAL_STATE });
-    } else {
-      initTrip();
+      const payload = {
+        name: "",
+        note: "",
+        startDate: null,
+        endDate: null,
+        itinerary: [],
+        members: [user.userId],
+      };
+      dispatch({ type: "INIT_TRIP", payload });
+    }
+
+    // Get existing trip
+    else {
+      getTrip();
     }
   }, [tripId]);
+
+  // Handle trip creation and updates
+  const saveTrip = async () => {
+    if (tripId !== "new") {
+      try {
+        setLoading(true);
+        const result = await API.updateTrip({ trip });
+        dispatch({ type: "INIT_TRIP", payload: result });
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      try {
+        setLoading(true);
+        const result = await API.createTrip({ trip });
+        dispatch({ type: "INIT_TRIP", payload: result });
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  // Handle trip deletion
+  const deleteTrip = async () => {
+    try {
+      setLoading(true);
+      await API.deleteTrip({ tripId });
+      navigate(`/`);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return trip ? (
     trip.startDate && trip.endDate && initialCoordinates ? (
       <MainScreen
-        trip={trip}
         actions={actions}
+        trip={trip}
+        saveTrip={saveTrip}
         initialCoordinates={initialCoordinates}
       />
     ) : (
       <SetupScreen
-        trip={trip}
         actions={actions}
+        trip={trip}
         initialCoordinates={initialCoordinates}
         setInitialCoordinates={setInitialCoordinates}
       />
@@ -327,7 +375,7 @@ const SetupGroup = styled.div`
   gap: 20px;
 `;
 
-const MainScreen = ({ trip, actions, initialCoordinates }) => {
+const MainScreen = ({ actions, trip, saveTrip, initialCoordinates }) => {
   // API loading and error state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -361,14 +409,7 @@ const MainScreen = ({ trip, actions, initialCoordinates }) => {
   return (
     <MainContainer>
       <MainSidebar>
-        <Itinerary
-          startDate={trip.startDate}
-          endDate={trip.endDate}
-          itinerary={trip.itinerary}
-          moveEvent={actions.moveEvent}
-          removeEvent={actions.removeEvent}
-          setEventTime={actions.setEventTime}
-        />
+        <Itinerary actions={actions} trip={trip} saveTrip={saveTrip} />
         <Experiences
           loading={loading}
           experiences={experiences}
@@ -398,9 +439,12 @@ const MainContainer = styled.div`
 `;
 
 const MainSidebar = styled.div`
+  z-index: 1;
+  position: relative;
   height: 100%;
   display: grid;
   grid-template-columns: 420px 520px;
+  box-shadow: ${({ theme }) => theme.shadow_2xl};
 `;
 
 const MainContent = styled.div`

@@ -11,22 +11,7 @@ import { UserContext } from "../App";
 const Header = ({ headerRef }) => {
   const [user, setUser] = useContext(UserContext);
 
-  const onCreateTripClicked = () => {
-    navigate("/trip/edit/new");
-  };
-
-  const onCreateExperienceClicked = () => {
-    navigate("/experience/edit/new");
-  };
-
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const isEditing =
-    location.pathname.includes("/experience/edit") ||
-    location.pathname.includes("/trip/edit");
-
-  const maxWidth = isEditing ? "100%" : "1200px";
 
   const onLoginClicked = () => {
     navigate("/login");
@@ -39,26 +24,14 @@ const Header = ({ headerRef }) => {
 
   return (
     <Wrapper ref={headerRef}>
-      <Container maxWidth={maxWidth}>
+      <Container>
         <Group>
           <Logo to="/">Perfect Trip</Logo>
         </Group>
         {user ? (
           <Group>
-            <Button onClick={onCreateTripClicked}>
-              Plan New Trip
-            </Button>
-            <button style={{visibility:"hidden"}}>
-            </button>
-            <Button onClick={onCreateExperienceClicked}>
-              Create New Experience
-            </Button>
-          </Group>
-        ) : (<p/>)}
-        {user ? (
-          <Group>
-            <Username to={`/profile/${user.userId}`} style={{fontSize: "20px"}}>{user.username}</Username>
             <Image src={user.avatar}/>
+            <Username to={`/profile/${user.userId}`}>{user.username}</Username>
             <Button onClick={onLogoutClicked}>Logout</Button>
           </Group>
         ) : (
@@ -80,7 +53,7 @@ const Container = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: ${({ maxWidth }) => maxWidth};
+  max-width: 100%;
   margin: 0 auto;
   padding: 10px 30px;
 `;

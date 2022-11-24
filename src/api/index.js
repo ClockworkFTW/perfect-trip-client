@@ -189,7 +189,7 @@ export const deleteExperience = async ({ experienceId }) => {
     const result = await axios({
       baseURL: API_URL,
       url: `/experience/delete`,
-      method: "post",
+      method: "delete",
       headers: getAuthHeader(),
     });
 
@@ -208,6 +208,53 @@ export const getTrip = async ({ tripId }) => {
     });
 
     return result.data.trip;
+  } catch (error) {
+    throw error.response.data.message;
+  }
+};
+
+export const createTrip = async ({ trip }) => {
+  try {
+    const result = await axios({
+      baseURL: API_URL,
+      url: `/trip/`,
+      method: "post",
+      data: trip,
+      headers: getAuthHeader(),
+    });
+
+    return result.data.experience;
+  } catch (error) {
+    throw error.response.data.message;
+  }
+};
+
+export const updateTrip = async ({ trip }) => {
+  try {
+    const result = await axios({
+      baseURL: API_URL,
+      url: `/trip/${trip.id}`,
+      method: "patch",
+      data: trip,
+      headers: getAuthHeader(),
+    });
+
+    return result.data.experience;
+  } catch (error) {
+    throw error.response.data.message;
+  }
+};
+
+export const deleteTrip = async ({ tripId }) => {
+  try {
+    const result = await axios({
+      baseURL: API_URL,
+      url: `/trip/delete`,
+      method: "delete",
+      headers: getAuthHeader(),
+    });
+
+    return result.data.tripId;
   } catch (error) {
     throw error.response.data.message;
   }

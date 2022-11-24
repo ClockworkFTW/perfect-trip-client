@@ -1,97 +1,56 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Experiences from "../components/Experiences";
-import TripMap from "../components/Map/TripMap";
-
-import * as API from "../api";
 
 // Components
 import Button from "../components/Button";
-import Icon from "../components/Icon";
 
 // Context
 import { UserContext } from "../App";
 
 const Home = () => {
   const [user] = useContext(UserContext);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  // Experience list state
-  const [experiences, setExperiences] = useState([]);
-
-  // Experience filter state
-  const [keywords, setKeywords] = useState([]);
-  const [coordinates, setCoordinates] = useState({
-    center: { latitude: 37.7749, longitude: -122.4194 },
-    northEast: null,
-    southWest: null,
-  });
   const navigate = useNavigate();
 
-  const onCreateTripClicked = () => {
-    navigate("/trip/edit/new");
-  };
-
-  const onCreateExperienceClicked = () => {
-    navigate("/experience/edit/new");
-  };
-
-  useEffect(() => {
-    const getExperiences = async () => {
-      try {
-        setLoading(true);
-        const result = await API.searchExperiences({ keywords, coordinates });
-        setExperiences(result);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (coordinates.northEast && coordinates.southWest) {
-      getExperiences();
-    }
-  }, [keywords, coordinates]);
-
   return (
-    <Container>
-      <Sidebar>
-        <Experiences
-          loading={loading}
-          experiences={experiences}
-          keywords={keywords}
-        />
-      </Sidebar>
-      <Main>
-        <TripMap
-          loading={loading}
-          experiences={experiences}
-          latitude={coordinates.center.latitude}
-          longitude={coordinates.center.longitude}
-          setCoordinates={setCoordinates}/>
-      </Main>
-    </Container>
+    <Wrapper>
+      <Container>
+        <Header>Perfect Trip</Header>
+        {user ? (
+          <>
+            <Button onClick={() => navigate("/trip/edit/new")}>
+              Plan a Trip
+            </Button>
+            <Button onClick={() => navigate("/experience/edit/new")}>
+              Create an Experience
+            </Button>
+          </>
+        ) : (
+          <Message>
+            To create trips and experiences please register an account
+          </Message>
+        )}
+      </Container>
+    </Wrapper>
   );
 };
 
-const Container = styled.div`
-  height: 100%;
-  display: grid;
-  grid-template-columns: 520px 1fr;
-`;
-
-const Sidebar = styled.div`
-  height: 100%;
-  display: grid;
-  grid-template-columns: 520px;
-`;
-
-const Main = styled.div`
+const Wrapper = styled.div`
   position: relative;
+  width: 100%;
+  height: 100%;
 `;
 
+const Header = styled.h1`
+  color: ${({ theme }) => theme.white};
+  font-family: "Lilita One", cursive;
+  font-size: 46px;
+`;
+
+const Message = styled.p`
+  font-size: 20px;
+  color: ${({ theme }) => theme.neutral["300"]};
+`;
 
 export default Home;

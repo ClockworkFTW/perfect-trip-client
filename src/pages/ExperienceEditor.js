@@ -219,8 +219,11 @@ const Container = styled.div`
 `;
 
 const Sidebar = styled.div`
+  z-index: 1;
+  position: relative;
   padding: 30px;
   background-color: ${({ theme }) => theme.neutral["100"]};
+  box-shadow: ${({ theme }) => theme.shadow_2xl};
 `;
 
 const Main = styled.div`
