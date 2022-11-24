@@ -10,7 +10,7 @@ import Keyword from "../Keywords/Keyword";
 // Config
 import { KEYWORDS } from "../../config";
 
-const Event = ({ event, removeEvent, setEventTime, color }) => {
+const Event = ({ actions, event, color }) => {
   const { id, index, experience, date, time } = event;
 
   const keyword = KEYWORDS[experience.keywords[0]];
@@ -27,7 +27,7 @@ const Event = ({ event, removeEvent, setEventTime, color }) => {
           <Header>
             <Order
               index={index}
-              removeEvent={() => removeEvent({ id })}
+              removeEvent={() => actions.removeEvent({ id })}
               color={color}
             />
             <Title isDragging={snapshot.isDragging}>{experience.title}</Title>
@@ -36,7 +36,7 @@ const Event = ({ event, removeEvent, setEventTime, color }) => {
                 id={id}
                 date={date}
                 time={time}
-                setEventTime={setEventTime}
+                setEventTime={actions.setEventTime}
                 color={color}
               />
             )}

@@ -15,12 +15,19 @@ import { roundCoords } from "../../util";
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
 
-const TripMap = ({ experiences, latitude, longitude, setCoordinates }) => {
+const TripMap = (props) => {
+  const { experiences, itinerary, lists, latitude, longitude, setCoordinates } =
+    props;
+
+  // Element references
   const mapContainer = useRef(null);
   const map = useRef(null);
 
   const [searchCoordinates, setSearchCoordinates] = useState(null);
-  const [markers, setMarkers] = useState([]);
+
+  // Markers
+  const [experienceMarkers, setExperienceMarkers] = useState([]);
+  const [itineraryMarkers, setItineraryMarkers] = useState([]);
 
   // Handle initialization
   useEffect(() => {
@@ -31,7 +38,7 @@ const TripMap = ({ experiences, latitude, longitude, setCoordinates }) => {
       container: mapContainer.current,
       center: [longitude, latitude],
       style: "mapbox://styles/mapbox/outdoors-v12",
-      zoom: 12,
+      zoom: 14,
     });
 
     // Initialize coordinates
@@ -88,7 +95,7 @@ const TripMap = ({ experiences, latitude, longitude, setCoordinates }) => {
     });
 
     // Update map zoom and fly to center
-    const zoom = map.current.getZoom() > 12 ? map.current.getZoom() : 12;
+    const zoom = map.current.getZoom() > 14 ? map.current.getZoom() : 14;
     map.current.flyTo({ center: [lng, lat], zoom });
   }, [searchCoordinates]);
 
@@ -97,32 +104,64 @@ const TripMap = ({ experiences, latitude, longitude, setCoordinates }) => {
     if (!map.current) return;
 
     // Remove old markers
-    markers.forEach((marker) => {
+    experienceMarkers.forEach((marker) => {
+      marker.remove();
+    });
+    itineraryMarkers.forEach((marker) => {
       marker.remove();
     });
 
-    // Initialize new marker list
-    const newMarkers = [];
+    // Initialize new marker lists
+    const newExperienceMarkers = [];
+    const newItineraryMarkers = [];
 
-    // Render custom marker components
+    // Create experience markers
     experiences.forEach((experience) => {
       // Render a Marker Component on new DOM node
       const ref = createRef();
       ref.current = document.createElement("div");
       ReactDOM.createRoot(ref.current).render(
-        <MarkerIcon experience={experience} />
+        <MarkerIcon color="green" experience={experience} />
       );
 
       // Create a Mapbox Marker at new DOM node
       const marker = new mapboxgl.Marker(ref.current);
       marker.setLngLat([experience.longitude, experience.latitude]);
       marker.addTo(map.current);
-      newMarkers.push(marker);
+      newExperienceMarkers.push(marker);
     });
 
-    // Update marker list
-    setMarkers(newMarkers);
-  }, [experiences]);
+    // Create itinerary markers
+    itinerary.forEach((event) => {
+      // Render a Marker Component on new DOM node
+      const ref = createRef();
+      ref.current = document.createElement("div");
+
+      // Get marker color
+      let color = "green";
+      if (event.date) {
+        color = lists.find((list) => list.id === event.date).color;
+      }
+
+      ReactDOM.createRoot(ref.current).render(
+        <MarkerIcon
+          color={color}
+          number={event.index + 1}
+          experience={event.experience}
+        />
+      );
+
+      // Create a Mapbox Marker at new DOM node
+      const marker = new mapboxgl.Marker(ref.current);
+      marker.setLngLat([event.experience.longitude, event.experience.latitude]);
+      marker.addTo(map.current);
+      newItineraryMarkers.push(marker);
+    });
+
+    // Update marker lists
+    setExperienceMarkers(newExperienceMarkers);
+    setItineraryMarkers(newItineraryMarkers);
+  }, [experiences, itinerary]);
 
   return (
     <Wrapper>

@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useRef, useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
@@ -9,7 +9,6 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import TripList from "./pages/TripList";
 import TripView from "./pages/TripView";
 import TripEditor from "./pages/TripEditor";
 import ExperienceView from "./pages/ExperienceView";
@@ -20,6 +19,7 @@ import Profile from "./pages/Profile";
 export const UserContext = createContext();
 
 const App = () => {
+  const initialized = useRef(false);
   const [user, setUser] = useState(null);
 
   // Initialize user
@@ -30,13 +30,15 @@ const App = () => {
       const payload = jwtDecode(token);
       setUser({ ...payload, token });
     }
+
+    initialized.current = true;
   }, []);
 
-  return (
+  return initialized.current ? (
     <UserContext.Provider value={[user, setUser]}>
       <Router />
     </UserContext.Provider>
-  );
+  ) : null;
 };
 
 const Router = () => (
@@ -46,7 +48,6 @@ const Router = () => (
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="trip">
-        <Route index element={<TripList />} />
         <Route path=":tripId" element={<TripView />} />
         <Route path=":edit/:tripId" element={<TripEditor />} />
       </Route>

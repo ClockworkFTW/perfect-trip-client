@@ -2,14 +2,15 @@ import { useContext, useEffect, useReducer, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
+import dayjs from "dayjs";
 
 // API methods
 import * as API from "../api";
 
 // Components
 import Topography from "../components/Topography";
-import Itinerary from "../components/Itinerary";
-import Experiences from "../components/Experiences";
+import TripForm from "../components/TripForm";
+import ExperienceList from "../components/ExperienceList";
 import TripMap from "../components/Map/TripMap";
 import Search from "../components/Map/Search";
 import Input from "../components/Input";
@@ -27,10 +28,6 @@ const tripReducer = (state, action) => {
 
     case "SET_NAME": {
       return { ...state, name: action.payload };
-    }
-
-    case "SET_NOTE": {
-      return { ...state, note: action.payload };
     }
 
     case "SET_START_DATE": {
@@ -181,9 +178,6 @@ const TripEditor = () => {
     setName: (payload) => {
       dispatch({ type: "SET_NAME", payload });
     },
-    setNote: (payload) => {
-      dispatch({ type: "SET_NOTE", payload });
-    },
     setStartDate: (payload) => {
       dispatch({ type: "SET_START_DATE", payload });
     },
@@ -222,7 +216,6 @@ const TripEditor = () => {
     if (tripId === "new") {
       const payload = {
         name: "",
-        note: "",
         startDate: null,
         endDate: null,
         itinerary: [],
@@ -239,27 +232,28 @@ const TripEditor = () => {
 
   // Handle trip creation and updates
   const saveTrip = async () => {
-    if (tripId !== "new") {
-      try {
-        setLoading(true);
-        const result = await API.updateTrip({ trip });
-        dispatch({ type: "INIT_TRIP", payload: result });
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      try {
-        setLoading(true);
-        const result = await API.createTrip({ trip });
-        dispatch({ type: "INIT_TRIP", payload: result });
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    }
+    console.log(trip);
+    // if (tripId !== "new") {
+    //   try {
+    //     setLoading(true);
+    //     const result = await API.updateTrip({ trip });
+    //     dispatch({ type: "INIT_TRIP", payload: result });
+    //   } catch (error) {
+    //     setError(error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // } else {
+    //   try {
+    //     setLoading(true);
+    //     const result = await API.createTrip({ trip });
+    //     dispatch({ type: "INIT_TRIP", payload: result });
+    //   } catch (error) {
+    //     setError(error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // }
   };
 
   // Handle trip deletion
@@ -406,11 +400,30 @@ const MainScreen = ({ actions, trip, saveTrip, initialCoordinates }) => {
     }
   }, [keywords, coordinates]);
 
+  // Get trip date count
+  const dateCount = dayjs(trip.endDate).diff(trip.startDate, "day") + 1;
+
+  const colors = ["blue", "violet", "yellow", "pink", "orange", "cyan", "red"];
+
+  // Generate a list for each date
+  const lists = [...Array(dateCount)].map((_, i) => {
+    const date = dayjs(trip.startDate).add(i, "day");
+    const id = date.format("YYYY-MM-DD");
+    const color = colors[i % colors.length];
+    const header = date.format("ddd, MMM D");
+    return { id, color, header };
+  });
+
   return (
     <MainContainer>
       <MainSidebar>
-        <Itinerary actions={actions} trip={trip} saveTrip={saveTrip} />
-        <Experiences
+        <TripForm
+          actions={actions}
+          lists={lists}
+          trip={trip}
+          saveTrip={saveTrip}
+        />
+        <ExperienceList
           loading={loading}
           experiences={experiences}
           addEvent={actions.addEvent}
@@ -421,6 +434,7 @@ const MainScreen = ({ actions, trip, saveTrip, initialCoordinates }) => {
       <MainContent>
         <TripMap
           loading={loading}
+          lists={lists}
           experiences={experiences}
           itinerary={trip.itinerary}
           latitude={coordinates.center.latitude}

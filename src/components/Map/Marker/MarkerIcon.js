@@ -1,23 +1,39 @@
+// Config
 import { KEYWORDS } from "../../../config";
 
+// Components
 import Icon from "../../Icon";
+
+// Theme
+import theme from "../../../styles/theme";
 
 const styleParent = {
   position: "relative",
-  color: "#22c55e",
   fontSize: "42px",
 };
 
 const styleChild = {
   position: "absolute",
-  top: "2px",
   left: "50%",
   transform: "translateX(-50%)",
   color: "white",
+};
+
+const styleIcon = {
+  ...styleChild,
+  top: "2px",
   fontSize: "30px",
 };
 
-const MarkerIcon = ({ experience = { keywords: [] } }) => {
+const styleNumber = {
+  ...styleChild,
+  top: "8px",
+  fontSize: "22px",
+  fontFamily: "Helvetica",
+  fontWeight: "700",
+};
+
+const MarkerIcon = ({ color, number, experience = { keywords: [] } }) => {
   const icons = [];
 
   experience.keywords.forEach((keyword) => {
@@ -27,10 +43,12 @@ const MarkerIcon = ({ experience = { keywords: [] } }) => {
   });
 
   return (
-    <div style={styleParent}>
-      <Icon icon="location-pin" />
-      {icons.length === 0 ? null : (
-        <div style={styleChild}>
+    <div style={{ ...styleParent, color: theme[color]["500"] }}>
+      <Icon icon="location-pin" shadow={true} />
+      {number ? (
+        <div style={styleNumber}>{number}</div>
+      ) : (
+        <div style={styleIcon}>
           <Icon icon={icons[0]} />
         </div>
       )}

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Menu from "./Menu";
 import Experience from "./Experience";
 
-const Experiences = (props) => {
+const ExperienceList = (props) => {
   const { loading, experiences, addEvent, keywords, setKeywords } = props;
 
   // Calculate menu height
@@ -76,4 +76,4 @@ const Loader = styled.div`
   color: ${({ theme }) => theme.neutral["700"]};
 `;
 
-export default Experiences;
+export default ExperienceList;
