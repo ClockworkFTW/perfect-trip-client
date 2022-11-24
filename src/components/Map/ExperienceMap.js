@@ -27,15 +27,13 @@ const ExperienceMap = ({ latitude, longitude, setCoordinates }) => {
     // Initialize map
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v11",
-      projection: "globe",
+      style: "mapbox://styles/mapbox/outdoors-v12",
       center: [longitude, latitude],
       zoom: 12,
     });
 
-    // Initialize fog and marker
+    // Initialize marker
     map.current.on("style.load", () => {
-      map.current.setFog({});
       markerContainer.current = document.createElement("div");
       ReactDOM.createRoot(markerContainer.current).render(<MarkerIcon />);
       marker.current = new mapboxgl.Marker(markerContainer.current)

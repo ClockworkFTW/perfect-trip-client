@@ -30,14 +30,8 @@ const TripMap = ({ experiences, latitude, longitude, setCoordinates }) => {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       center: [longitude, latitude],
-      style: "mapbox://styles/mapbox/streets-v11",
-      projection: "globe",
+      style: "mapbox://styles/mapbox/outdoors-v12",
       zoom: 12,
-    });
-
-    // Initialize fog
-    map.current.on("style.load", () => {
-      map.current.setFog({});
     });
 
     // Initialize coordinates
