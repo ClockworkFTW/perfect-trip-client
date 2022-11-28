@@ -1,8 +1,9 @@
 import { useContext } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 // Components
+import Avatar from "./Avatar";
 import Button from "./Button";
 
 // Context
@@ -30,7 +31,7 @@ const Header = ({ headerRef }) => {
         </Group>
         {user ? (
           <Group>
-            <Image src={user.avatar}/>
+            <Avatar user={user} />
             <Username to={`/profile/${user.userId}`}>{user.username}</Username>
             <Button onClick={onLogoutClicked}>Logout</Button>
           </Group>
@@ -58,11 +59,16 @@ const Container = styled.nav`
   padding: 10px 30px;
 `;
 
-const Group = styled.div`
-`;
+const Group = styled.div``;
 
 const Username = styled(Link)`
   margin-right: 8px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.neutral["700"]};
+  transition: color 0.2s ease-in-out;
+  :hover {
+    color: ${({ theme }) => theme.green["500"]};
+  }
 `;
 
 const Logo = styled(Link)`
@@ -72,14 +78,14 @@ const Logo = styled(Link)`
 `;
 
 const Image = styled.img`
-display: inline-block;
-margin-bottom: -15px;
-margin-right: 12px;
-padding: 0;
-aspect-ratio: 1 / 1;
-width: 40px;
-border-radius: 8px;
-background-color: ${({ theme }) => theme.white};`
-
+  display: inline-block;
+  margin-bottom: -15px;
+  margin-right: 12px;
+  padding: 0;
+  aspect-ratio: 1 / 1;
+  width: 40px;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.white};
+`;
 
 export default Header;

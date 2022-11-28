@@ -1,4 +1,4 @@
-import { createContext, useRef, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
@@ -9,7 +9,6 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import TripView from "./pages/TripView";
 import TripEditor from "./pages/TripEditor";
 import ExperienceView from "./pages/ExperienceView";
 import ExperienceEditor from "./pages/ExperienceEditor";
@@ -48,7 +47,6 @@ const Router = () => (
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="trip">
-        <Route path=":tripId" element={<TripView />} />
         <Route path=":edit/:tripId" element={<TripEditor />} />
       </Route>
       <Route path="experience">

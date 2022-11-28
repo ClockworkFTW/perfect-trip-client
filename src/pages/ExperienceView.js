@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import ExperienceMap from "../components/Map/ExperienceMap"
+import ExperienceMap from "../components/Map/ExperienceMap";
 import Rating from "../components/Rating";
 
 import * as API from "../api"
@@ -22,7 +22,6 @@ const ExperienceView = () => {
   // Router hooks
   const location = useLocation();
   const navigate = useNavigate();
-
 
   // Experience state
   const [experience, setExperience] = useState(null);
@@ -125,6 +124,7 @@ const ExperienceView = () => {
         </Images>
       </ExpInfo>
 
+
       <Field>
         <Label id="reviews" text="Reviews">
           <Icon icon="star" color="neutral" shade="500" />
@@ -214,6 +214,7 @@ const DivWrap = styled.div`
   height: 100%;
   padding-top: 2%;
   margin-left: 20%
+
 `;
 
 const ExpInfo = styled.div`
@@ -251,7 +252,7 @@ const Image = styled.img`
   border: 4px solid lightgray;
   background: lightgray;
   border-radius: 4px;
-  padding: .25rem;
+  padding: 0.25rem;
   margin-right: 10px;
   max-height: 340px;
 `;
