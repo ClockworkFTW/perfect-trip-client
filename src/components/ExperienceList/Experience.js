@@ -9,7 +9,7 @@ import Keyword from "../Keywords/Keyword";
 import Button from "../Button";
 
 const Experience = ({ experience, addEvent }) => {
-  const { title, description, rating, images, country, country_code } =
+  const { title, description, rating, images, countryName, countryCode } =
     experience;
 
   const keyword = KEYWORDS[experience.keywords[0]];
@@ -18,8 +18,8 @@ const Experience = ({ experience, addEvent }) => {
     <Container>
       <Image url={images[0]}>
         <Country>
-          <Flag code={country_code} margin="0 8px 0 0" />
-          {country}
+          <Flag code={countryCode} margin="0 8px 0 0" />
+          {countryName}
         </Country>
       </Image>
       <Content>

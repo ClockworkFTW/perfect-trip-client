@@ -33,7 +33,9 @@ const styleNumber = {
   fontWeight: "700",
 };
 
-const MarkerIcon = ({ color, number, experience = { keywords: [] } }) => {
+const MarkerIcon = (props) => {
+  const { color = "green", number, experience = { keywords: [] } } = props;
+
   const icons = [];
 
   experience.keywords.forEach((keyword) => {
@@ -49,7 +51,7 @@ const MarkerIcon = ({ color, number, experience = { keywords: [] } }) => {
         <div style={styleNumber}>{number}</div>
       ) : (
         <div style={styleIcon}>
-          <Icon icon={icons[0]} />
+          <Icon icon={icons.length ? icons[0] : "location-crosshairs"} />
         </div>
       )}
     </div>

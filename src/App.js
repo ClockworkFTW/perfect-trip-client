@@ -19,8 +19,8 @@ import Profile from "./pages/Profile";
 export const UserContext = createContext();
 
 const App = () => {
-  const initialized = useRef(false);
   const [user, setUser] = useState(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Initialize user
   useEffect(() => {
@@ -31,10 +31,10 @@ const App = () => {
       setUser({ ...payload, token });
     }
 
-    initialized.current = true;
+    setIsInitialized(true);
   }, []);
 
-  return initialized.current ? (
+  return isInitialized ? (
     <UserContext.Provider value={[user, setUser]}>
       <Router />
     </UserContext.Provider>

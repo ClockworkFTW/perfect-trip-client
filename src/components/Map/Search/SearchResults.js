@@ -8,7 +8,7 @@ const SearchResults = ({ darkMode, places, selectPlace, error }) =>
       <List>
         {places.map((place) => {
           // Extract values
-          const { id, title, city, country, country_code } = place;
+          const { id, title, city, country, countryCode } = place;
 
           // Extract coordinates
           const lat = place.latitude;
@@ -21,7 +21,7 @@ const SearchResults = ({ darkMode, places, selectPlace, error }) =>
 
           return (
             <Item key={id} onClick={() => selectPlace({ name, lat, lng })}>
-              <Flag code={country_code} margin="0 8px 0 0" />
+              <Flag code={countryCode} margin="0 8px 0 0" />
               {name}
             </Item>
           );

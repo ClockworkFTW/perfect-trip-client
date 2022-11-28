@@ -1,5 +1,5 @@
 import { useContext, useEffect, useReducer, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
 import dayjs from "dayjs";
@@ -23,6 +23,7 @@ import { UserContext } from "../App";
 const tripReducer = (state, action) => {
   switch (action.type) {
     case "INIT_TRIP": {
+      console.log(action.payload);
       return action.payload;
     }
 
@@ -165,6 +166,7 @@ const TripEditor = () => {
   // Router hooks
   const { tripId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // API loading and error state
   const [loading, setLoading] = useState(false);
@@ -204,6 +206,7 @@ const TripEditor = () => {
       try {
         setLoading(true);
         const result = await API.getTrip({ tripId });
+        setInitialCoordinates(result.initialCoordinates);
         dispatch({ type: "INIT_TRIP", payload: result });
       } catch (error) {
         setError(error);
@@ -215,45 +218,50 @@ const TripEditor = () => {
     // Initialize new trip
     if (tripId === "new") {
       const payload = {
+        id: tripId,
         name: "",
         startDate: null,
         endDate: null,
         itinerary: [],
-        members: [user.userId],
+        members: [user],
       };
       dispatch({ type: "INIT_TRIP", payload });
     }
 
     // Get existing trip
     else {
-      getTrip();
+      if (location.state?.trip) {
+        setInitialCoordinates(location.state.trip.initialCoordinates);
+        dispatch({ type: "INIT_TRIP", payload: location.state.trip });
+      } else {
+        getTrip({ tripId });
+      }
     }
   }, [tripId]);
 
   // Handle trip creation and updates
   const saveTrip = async () => {
-    console.log(trip);
-    // if (tripId !== "new") {
-    //   try {
-    //     setLoading(true);
-    //     const result = await API.updateTrip({ trip });
-    //     dispatch({ type: "INIT_TRIP", payload: result });
-    //   } catch (error) {
-    //     setError(error);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // } else {
-    //   try {
-    //     setLoading(true);
-    //     const result = await API.createTrip({ trip });
-    //     dispatch({ type: "INIT_TRIP", payload: result });
-    //   } catch (error) {
-    //     setError(error);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // }
+    if (tripId !== "new") {
+      try {
+        setLoading(true);
+        const result = await API.updateTrip({ trip });
+        dispatch({ type: "INIT_TRIP", payload: result });
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      try {
+        setLoading(true);
+        const result = await API.createTrip({ trip });
+        navigate(`/trip/edit/${result.id}`, { state: { experience: result } });
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   // Handle trip deletion
@@ -275,6 +283,7 @@ const TripEditor = () => {
         actions={actions}
         trip={trip}
         saveTrip={saveTrip}
+        deleteTrip={deleteTrip}
         initialCoordinates={initialCoordinates}
       />
     ) : (
@@ -369,7 +378,9 @@ const SetupGroup = styled.div`
   gap: 20px;
 `;
 
-const MainScreen = ({ actions, trip, saveTrip, initialCoordinates }) => {
+const MainScreen = (props) => {
+  const { actions, trip, saveTrip, deleteTrip, initialCoordinates } = props;
+
   // API loading and error state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -422,6 +433,7 @@ const MainScreen = ({ actions, trip, saveTrip, initialCoordinates }) => {
           lists={lists}
           trip={trip}
           saveTrip={saveTrip}
+          deleteTrip={deleteTrip}
         />
         <ExperienceList
           loading={loading}

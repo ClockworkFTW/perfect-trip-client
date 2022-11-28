@@ -205,6 +205,7 @@ export const getTrip = async ({ tripId }) => {
       baseURL: API_URL,
       url: `/trip/${tripId}`,
       method: "get",
+      headers: getAuthHeader(),
     });
 
     return result.data.trip;
@@ -223,7 +224,7 @@ export const createTrip = async ({ trip }) => {
       headers: getAuthHeader(),
     });
 
-    return result.data.experience;
+    return result.data.trip;
   } catch (error) {
     throw error.response.data.message;
   }
@@ -239,7 +240,7 @@ export const updateTrip = async ({ trip }) => {
       headers: getAuthHeader(),
     });
 
-    return result.data.experience;
+    return result.data.trip;
   } catch (error) {
     throw error.response.data.message;
   }
@@ -249,7 +250,7 @@ export const deleteTrip = async ({ tripId }) => {
   try {
     const result = await axios({
       baseURL: API_URL,
-      url: `/trip/delete`,
+      url: `/trip/${tripId}`,
       method: "delete",
       headers: getAuthHeader(),
     });

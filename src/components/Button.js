@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-const Button = ({ children, onClick, width }) => (
-  <Container width={width} onClick={onClick}>
+const Button = ({ children, onClick, width, color = "green" }) => (
+  <Container width={width} onClick={onClick} color={color}>
     {children}
   </Container>
 );
@@ -9,7 +9,7 @@ const Button = ({ children, onClick, width }) => (
 const Container = styled.button`
   flex-shrink: 0;
   width: ${({ width }) => width};
-  background-color: ${({ theme }) => theme.green["500"]};
+  background-color: ${({ theme, color }) => theme[color]["500"]};
   border-radius: 8px;
   border: none;
   color: ${({ theme }) => theme.white};
@@ -18,7 +18,7 @@ const Container = styled.button`
   transition: background-color 0.2s ease-in-out;
   :hover {
     cursor: pointer;
-    background-color: ${({ theme }) => theme.green["400"]};
+    background-color: ${({ theme, color }) => theme[color]["400"]};
   }
 `;
 

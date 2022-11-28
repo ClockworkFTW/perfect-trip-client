@@ -6,7 +6,7 @@ import Button from "../Button";
 import Input from "../Input";
 import Field from "../Field";
 
-const TripForm = ({ actions, lists, trip, saveTrip }) => {
+const TripForm = ({ actions, lists, trip, saveTrip, deleteTrip }) => {
   return (
     <Wrapper>
       <Container>
@@ -19,7 +19,7 @@ const TripForm = ({ actions, lists, trip, saveTrip }) => {
               onChange={actions.setName}
             />
           </Field>
-          <Group>
+          <Group cols={2}>
             <Field id="start-date" isValid={trip.startDate}>
               <Input
                 id="start-date"
@@ -37,9 +37,16 @@ const TripForm = ({ actions, lists, trip, saveTrip }) => {
               />
             </Field>
           </Group>
-          <Button width="100%" onClick={saveTrip}>
-            Save
-          </Button>
+          <Group cols={trip.id === "new" ? 1 : 2}>
+            <Button width="100%" onClick={saveTrip}>
+              Save
+            </Button>
+            {trip.id !== "new" && (
+              <Button width="100%" onClick={deleteTrip} color="red">
+                Delete
+              </Button>
+            )}
+          </Group>
         </Content>
         <Itinerary actions={actions} lists={lists} itinerary={trip.itinerary} />
       </Container>
@@ -77,7 +84,7 @@ const Content = styled.div`
 
 const Group = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: ${({ cols }) => `repeat(${cols}, 1fr)`};
   column-gap: 20px;
 `;
 
