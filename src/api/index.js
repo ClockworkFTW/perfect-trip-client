@@ -199,6 +199,22 @@ export const deleteExperience = async ({ experienceId }) => {
   }
 };
 
+export const createReview = async ({ data }) => {
+  try {
+    const result = await axios({
+      baseURL: API_URL,
+      url: `/review/`,
+      method: "post",
+      data: data,
+      headers: getAuthHeader(),
+    });
+
+    return result.review.data;
+  } catch (error) {
+    throw error.response.message.data;
+  }
+};
+
 export const getTrip = async ({ tripId }) => {
   try {
     const result = await axios({
