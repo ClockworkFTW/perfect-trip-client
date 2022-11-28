@@ -1,16 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import ExperienceMap from "../components/Map/ExperienceMap"
+import ExperienceMap from "../components/Map/ExperienceMap";
 import Rating from "../components/Rating";
 
 import Icon from "../components/Icon";
 import Label from "../components/Label";
 
-
 // API
 import * as API from "../api";
 import { map } from "lodash";
+
 const ExperienceView = () => {
   const { experienceId } = useParams();
 
@@ -18,14 +18,12 @@ const ExperienceView = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-
   // Experience state
   const [experience, setExperience] = useState(null);
 
   // API loading and error state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
 
   //map
 
@@ -50,46 +48,48 @@ const ExperienceView = () => {
     }
   }, [experienceId]);
 
-
   return experience ? (
-      <DivWrap>
-        <ExpInfo>
+    <DivWrap>
+      <ExpInfo>
         <MapStyle>
-        <ExperienceMap 
-          latitude={experience.latitude}
-          longitude={experience.longitude}
-          setCoordinates={() => {map.longitude = experience.longitude; map.latitude=experience.latitude}}
-        />
-      </MapStyle>
+          <ExperienceMap
+            latitude={experience.latitude}
+            longitude={experience.longitude}
+            setCoordinates={() => {
+              map.longitude = experience.longitude;
+              map.latitude = experience.latitude;
+            }}
+          />
+        </MapStyle>
         <div>
           <i>{experience.country}</i>
           <h1>{experience.title}</h1>
           <p>{experience.description}</p>
           <Keywords>
-            {experience.keywords.map((keyword) =>(
-                <Keyword >
-                  <p>{keyword}</p>
-                </Keyword>
+            {experience.keywords.map((keyword) => (
+              <Keyword>
+                <p>{keyword}</p>
+              </Keyword>
             ))}
           </Keywords>
         </div>
         <Rating rating={4}></Rating>
-        </ExpInfo>
-        
+      </ExpInfo>
 
-        <Field>
+      <Field>
         <Label id="photo-carousel" text="Photos">
           <Icon icon="camera" color="neutral" shade="500" />
         </Label>
-      </Field>  
-      <div><Images>  
-     
-        {experience.images.map((imageurl) =>(
-          <Image>
-            <img src={imageurl} />
-          </Image>
+      </Field>
+      <div>
+        <Images>
+          {experience.images.map((imageurl) => (
+            <Image>
+              <img src={imageurl} />
+            </Image>
           ))}
-      </Images></div>
+        </Images>
+      </div>
 
       <Field>
         <Label id="reviews" text="Reviews">
@@ -97,21 +97,19 @@ const ExperienceView = () => {
         </Label>
       </Field>
       <div>
-          <Reviews>
-            {experience.reviews.map((review) =>(
-              <Review>
-                {review.user.username}
-                <Rating rating={review.rating} ></Rating>
-                <div>
-                  <p>{review.comment}</p>
-                </div>
-              </Review>
-
-            ))}
-          </Reviews>
-
+        <Reviews>
+          {experience.reviews.map((review) => (
+            <Review>
+              {review.user.username}
+              <Rating rating={review.rating}></Rating>
+              <div>
+                <p>{review.comment}</p>
+              </div>
+            </Review>
+          ))}
+        </Reviews>
       </div>
-      </DivWrap>    
+    </DivWrap>
   ) : null;
 };
 
@@ -125,8 +123,7 @@ const DivWrap = styled.div`
   width: 100%;
   height: 100%;
   margin-top: 5%;
-  margin-left: 33%
-
+  margin-left: 33%;
 `;
 
 const ExpInfo = styled.div`
@@ -148,10 +145,9 @@ const Keyword = styled.div`
   border: 4px solid lightgray;
   background: lightgray;
   border-radius: 4px;
-  padding: .25rem;
+  padding: 0.25rem;
   margin-right: 10px;
 `;
-
 
 const Images = styled.div`
   display: inline-flex;
@@ -161,7 +157,7 @@ const Image = styled.div`
   border: 4px solid lightgray;
   background: lightgray;
   border-radius: 4px;
-  padding: .25rem;
+  padding: 0.25rem;
   margin-right: 10px;
   height: fit-content;
 `;

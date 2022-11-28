@@ -4,6 +4,8 @@ import styled from "styled-components";
 
 // Components
 import Button from "../components/Button";
+import BucketList from "../components/BucketList";
+import Topography from "../components/Topography";
 
 // Context
 import { UserContext } from "../App";
@@ -15,23 +17,18 @@ const Home = () => {
 
   return (
     <Wrapper>
-      <Container>
-        <Header>Perfect Trip</Header>
-        {user ? (
-          <>
-            <Button onClick={() => navigate("/trip/edit/new")}>
-              Plan a Trip
-            </Button>
-            <Button onClick={() => navigate("/experience/edit/new")}>
-              Create an Experience
-            </Button>
-          </>
-        ) : (
+      <Topography />
+      {user ? (
+        <BucketList />
+      ) : (
+        <Center>
+          <Header>Welcome to Perfect Trip!</Header>
           <Message>
-            To create trips and experiences please register an account
+            To create trips and experiences please login or register an account
           </Message>
-        )}
-      </Container>
+          <Button onClick={() => navigate("/login")}>Login</Button>
+        </Center>
+      )}
     </Wrapper>
   );
 };
@@ -40,10 +37,10 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.neutral["800"]};
+  background-color: ${({ theme }) => theme.neutral["100"]};
 `;
 
-const Container = styled.div`
+const Center = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -52,14 +49,15 @@ const Container = styled.div`
 `;
 
 const Header = styled.h1`
-  color: ${({ theme }) => theme.white};
+  color: ${({ theme }) => theme.neutral["700"]};
   font-family: "Lilita One", cursive;
   font-size: 46px;
 `;
 
 const Message = styled.p`
+  margin-bottom: 20px;
   font-size: 20px;
-  color: ${({ theme }) => theme.neutral["300"]};
+  color: ${({ theme }) => theme.neutral["500"]};
 `;
 
 export default Home;

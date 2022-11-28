@@ -138,6 +138,21 @@ export const searchExperiences = async ({ keywords, coordinates }) => {
   }
 };
 
+export const getExperiences = async () => {
+  try {
+    const result = await axios({
+      baseURL: API_URL,
+      url: `/experience/`,
+      method: "get",
+      headers: getAuthHeader(),
+    });
+
+    return result.data.experiences;
+  } catch (error) {
+    throw error.response.data.message;
+  }
+};
+
 export const getExperience = async ({ experienceId }) => {
   try {
     const result = await axios({
@@ -194,6 +209,21 @@ export const deleteExperience = async ({ experienceId }) => {
     });
 
     return result.data.experienceId;
+  } catch (error) {
+    throw error.response.data.message;
+  }
+};
+
+export const getTrips = async () => {
+  try {
+    const result = await axios({
+      baseURL: API_URL,
+      url: `/trip/`,
+      method: "get",
+      headers: getAuthHeader(),
+    });
+
+    return result.data.trips;
   } catch (error) {
     throw error.response.data.message;
   }
