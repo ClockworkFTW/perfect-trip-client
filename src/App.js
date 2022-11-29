@@ -14,6 +14,7 @@ import TripEditor from "./pages/TripEditor";
 import ExperienceView from "./pages/ExperienceView";
 import ExperienceEditor from "./pages/ExperienceEditor";
 import Profile from "./pages/Profile";
+import Browser from "./pages/ExperienceBrowser";
 
 // Context
 export const UserContext = createContext();
@@ -54,6 +55,7 @@ const Router = () => (
       <Route path="experience">
         <Route path=":experienceId" element={<ExperienceView />} />
         <Route path=":edit/:experienceId" element={<ExperienceEditor />} />
+        <Route path="browse" element={<Browser />} />
       </Route>
       <Route path="profile/:userId" element={<Profile />} />
     </Route>
