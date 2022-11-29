@@ -99,6 +99,10 @@ const BucketList = () => {
       ) : (
         <p>No Experiences...</p>
       )}
+      <Banner>
+        <Header>Browse Experiences</Header>
+        <Button onClick={() => navigate("/experience/browse")}>Browse</Button>
+      </Banner>
     </Container>
   );
 };
