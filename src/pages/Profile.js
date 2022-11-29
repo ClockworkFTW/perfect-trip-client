@@ -1,4 +1,4 @@
-import { useState, useReducer ,useContext } from "react";
+import { useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import styled from "styled-components";
 import jwtDecode from "jwt-decode";
@@ -7,12 +7,11 @@ import jwtDecode from "jwt-decode";
 import * as API from "../api";
 
 // components
-import Topography from "../components/Topography";
 import Button from "../components/Button";
 import Label from "../components/Label";
 import Input from "../components/Input";
 import Icon from "../components/Icon";
-import Image from "../components/Image"
+import Image from "../components/Image";
 
 // Context
 import { UserContext } from "../App";
@@ -29,7 +28,6 @@ const Profile = () => {
   const [username, setUsername] = useState("");
   const [passwordD, setPasswordD] = useState("");
   const [avatar, setAvatar] = useState("");
-
 
   const onUpdateUserClicked = async () => {
     try {
@@ -80,7 +78,7 @@ const Profile = () => {
       const deletePass = { passwordD };
       setLoading(true);
       const result = await API.deleteAccount({ deletePass });
-      setUser(null)
+      setUser(null);
     } catch (error) {
       setError(error);
     } finally {
@@ -89,7 +87,7 @@ const Profile = () => {
   };
 
   const addImage = (image) => {
-    console.log(image)
+    console.log(image);
     setAvatar(image);
   };
 
@@ -98,87 +96,87 @@ const Profile = () => {
   };
 
   return user ? (
-      <Wrapper>
-        <Container>
-          <h1>Options</h1>
-          <h3>Change Username</h3>
-          <Field>
-            <Label id="user" text="Username">
-              <Icon icon="user" color="neutral" shade="500" />
-            </Label>
-            <Input
-              id="username"
-              type="text"
-              placeholder="username"
-              value={username}
-              onChange={setUsername}
-            />
-          </Field>
-          <Button onClick={onUpdateUserClicked} width="100%">
-            {loading ? "Loading..." : "Update Username"}
-          </Button>
-        </Container>
-        <Container>
-          <h3>Change Avatar</h3>
-          <Field id="images">
-            <Label id="avatar" text="Avatar">
-              <Icon icon="user" color="neutral" shade="500" />
-            </Label>
-            <Image
-              imageA={avatar}
-              addImage={addImage}
-              removeImage={removeImage}
-            />
-          </Field>
-          <Button onClick={onUpdateAvatarClicked} width="100%">
-            {loading ? "Loading..." : "Update Avatar"}
-          </Button>
-        </Container>
-        <Container>
-          <h3>Change Password </h3>
-          <Field>
-            <Label id="password" text="Current Password">
-              <Icon icon="lock-keyhole" color="neutral" shade="500" />
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              label="Password"
-              placeholder="password"
-              value={password}
-              onChange={setPassword}
-            />
-          </Field>
-          <Field>
-            <Label id="passwordA" text="New Password">
-              <Icon icon="lock-keyhole" color="neutral" shade="500" />
-            </Label>
-            <Input
-              id="passwordA"
-              type="password"
-              label="Password"
-              placeholder="password"
-              value={passwordA}
-              onChange={setPasswordA}
-            />
-          </Field>
-          <Field>
-            <Label id="passwordB" text="Confirm Password">
-              <Icon icon="lock-keyhole" color="neutral" shade="500" />
-            </Label>
-            <Input
-              id="passwordB"
-              type="password"
-              label="Password"
-              placeholder="password"
-              value={passwordB}
-              onChange={setPasswordB}
-            />
-          </Field>
-          <Button onClick={onUpdatePassClicked} width="100%">
-            {loading ? "Loading..." : "Update Password"}
-          </Button>
-          <p id="message" style={{ textAlign: 'center', fontSize: '20px'}} ></p>
+    <Wrapper>
+      <Container>
+        <h1>Options</h1>
+        <h3>Change Username</h3>
+        <Field>
+          <Label id="user" text="Username">
+            <Icon icon="user" color="neutral" shade="500" />
+          </Label>
+          <Input
+            id="username"
+            type="text"
+            placeholder="username"
+            value={username}
+            onChange={setUsername}
+          />
+        </Field>
+        <Button onClick={onUpdateUserClicked} width="100%">
+          {loading ? "Loading..." : "Update Username"}
+        </Button>
+      </Container>
+      <Container>
+        <h3>Change Avatar</h3>
+        <Field id="images">
+          <Label id="avatar" text="Avatar">
+            <Icon icon="user" color="neutral" shade="500" />
+          </Label>
+          <Image
+            imageA={avatar}
+            addImage={addImage}
+            removeImage={removeImage}
+          />
+        </Field>
+        <Button onClick={onUpdateAvatarClicked} width="100%">
+          {loading ? "Loading..." : "Update Avatar"}
+        </Button>
+      </Container>
+      <Container>
+        <h3>Change Password </h3>
+        <Field>
+          <Label id="password" text="Current Password">
+            <Icon icon="lock-keyhole" color="neutral" shade="500" />
+          </Label>
+          <Input
+            id="password"
+            type="password"
+            label="Password"
+            placeholder="password"
+            value={password}
+            onChange={setPassword}
+          />
+        </Field>
+        <Field>
+          <Label id="passwordA" text="New Password">
+            <Icon icon="lock-keyhole" color="neutral" shade="500" />
+          </Label>
+          <Input
+            id="passwordA"
+            type="password"
+            label="Password"
+            placeholder="password"
+            value={passwordA}
+            onChange={setPasswordA}
+          />
+        </Field>
+        <Field>
+          <Label id="passwordB" text="Confirm Password">
+            <Icon icon="lock-keyhole" color="neutral" shade="500" />
+          </Label>
+          <Input
+            id="passwordB"
+            type="password"
+            label="Password"
+            placeholder="password"
+            value={passwordB}
+            onChange={setPasswordB}
+          />
+        </Field>
+        <Button onClick={onUpdatePassClicked} width="100%">
+          {loading ? "Loading..." : "Update Password"}
+        </Button>
+        <p id="message" style={{ textAlign: "center", fontSize: "20px" }}></p>
       </Container>
       <Container>
         <h3>Delete Account</h3>
