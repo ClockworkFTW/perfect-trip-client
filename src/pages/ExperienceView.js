@@ -35,20 +35,20 @@ const ExperienceView = () => {
 
   //map
 
+  const initExperience = async () => {
+    try {
+      setLoading(true);
+      const result = await API.getExperience({ experienceId });
+      setExperience(result);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Initialize experience
   useEffect(() => {
-    const initExperience = async () => {
-      try {
-        setLoading(true);
-        const result = await API.getExperience({ experienceId });
-        setExperience(result);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (location.state?.experience) {
       setExperience(location.state.experience);
     } else {
@@ -64,10 +64,10 @@ const ExperienceView = () => {
     try {
       setLoading(true);
       const data = {experienceId, rating, rev};
-      const result = await API.createReview({data});
-      setReviewing(false);
-    } catch (error) {
-      setError(error);
+      const response = await API.createReview({data});
+      setExperience(response);
+      } catch (error) {
+        setError(error);
     } finally {
       setLoading(false);
     }
