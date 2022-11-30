@@ -224,11 +224,11 @@ export const createReview = async ({ data }) => {
       headers: getAuthHeader(),
     });
 
-    return result.review.data;
+    return result.data.experience;
   } catch (error) {
     throw error.response.message.data;
   }
-};  
+};
 
 export const getTrips = async () => {
   try {

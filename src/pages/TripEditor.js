@@ -23,7 +23,6 @@ import { UserContext } from "../App";
 const tripReducer = (state, action) => {
   switch (action.type) {
     case "INIT_TRIP": {
-      console.log(action.payload);
       return action.payload;
     }
 

@@ -1,14 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Experiences from "../components/Experiences";
-import BrowseMap from "../components/Map/BrowseMap";
 
 import * as API from "../api";
 
 // Components
-import Button from "../components/Button";
-import Icon from "../components/Icon";
+import Experiences from "../components/Experiences";
+import BrowseMap from "../components/Map/BrowseMap";
 
 // Context
 import { UserContext } from "../App";
@@ -25,8 +23,8 @@ const Browser = () => {
   const [keywords, setKeywords] = useState([]);
   const [coordinates, setCoordinates] = useState({
     center: { latitude: 37.7749, longitude: -122.4194 },
-    northEast: null,
-    southWest: null,
+    northEast: { latitude: 37.8726, longitude: -122.1812 },
+    southWest: { latitude: 37.6209, longitude: -122.6896 },
   });
   const navigate = useNavigate();
 
@@ -58,13 +56,13 @@ const Browser = () => {
         />
       </Sidebar>
       <Main>
-      <BrowseMap
-        loading={loading}
-        experiences={experiences}
-        latitude={37.7749}
-        longitude={-122.4194}
-        setCoordinates={setCoordinates}/>
-      />
+        <BrowseMap
+          loading={loading}
+          experiences={experiences}
+          latitude={37.7749}
+          longitude={-122.4194}
+          setCoordinates={setCoordinates}
+        />
       </Main>
     </Container>
   );

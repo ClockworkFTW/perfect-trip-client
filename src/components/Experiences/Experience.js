@@ -10,7 +10,7 @@ import Keyword from "../Keywords/Keyword";
 import Button from "../Button";
 
 const Experience = ({ experience, addExperienceToItinerary }) => {
-  const { title, description, rating, images, country, country_code } =
+  const { title, description, rating, images, countryName, countryCode } =
     experience;
   const userCreated = true;
   const navigate = useNavigate();
@@ -20,8 +20,8 @@ const Experience = ({ experience, addExperienceToItinerary }) => {
     <Container>
       <Image url={images[0]}>
         <Country>
-          <Flag code={country_code} margin="0 8px 0 0" />
-          {country}
+          <Flag code={countryCode} margin="0 8px 0 0" />
+          {countryName}
         </Country>
       </Image>
       <Content>
@@ -32,10 +32,11 @@ const Experience = ({ experience, addExperienceToItinerary }) => {
         <Description>{description}</Description>
         <Banner>
           <Keyword text={keyword.text} icon={keyword.icon} />
-          {userCreated ?
-          (<Button onClick={() => navigate(`/experience/${experience.id}`)}>
-            View
-          </Button>) : (null)}
+          {userCreated ? (
+            <Button onClick={() => navigate(`/experience/${experience.id}`)}>
+              View
+            </Button>
+          ) : null}
         </Banner>
       </Content>
     </Container>

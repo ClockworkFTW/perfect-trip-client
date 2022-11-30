@@ -9,14 +9,10 @@ const Avatar = ({ user }) => {
 };
 
 const Image = styled.img`
-  display: inline-block;
-  margin-bottom: -15px;
-  margin-right: 12px;
-  padding: 0;
-  aspect-ratio: 1 / 1;
   width: 40px;
+  height: 40px;
+  margin-right: 12px;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.white};
 `;
 
 export default Avatar;

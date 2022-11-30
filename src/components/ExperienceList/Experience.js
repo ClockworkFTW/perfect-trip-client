@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { KEYWORDS } from "../../config";
@@ -12,10 +13,16 @@ const Experience = ({ experience, addEvent }) => {
   const { title, description, rating, images, countryName, countryCode } =
     experience;
 
+  const navigate = useNavigate();
+
+  const onClick = () => {
+    navigate(`/experience/${experience.id}`);
+  };
+
   const keyword = KEYWORDS[experience.keywords[0]];
 
   return (
-    <Container>
+    <Container onClick={onClick}>
       <Image url={images[0]}>
         <Country>
           <Flag code={countryCode} margin="0 8px 0 0" />

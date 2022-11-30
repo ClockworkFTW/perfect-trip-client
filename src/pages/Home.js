@@ -26,10 +26,12 @@ const Home = () => {
           <Message>
             To create trips and experiences please login or register an account
           </Message>
-          <div>
-          <Button onClick={() => navigate("/experience/browse")}>Browse Experiences</Button>
-          </div>
-          <Button onClick={() => navigate("/login")}>Login</Button>
+          <Buttons>
+            <Button onClick={() => navigate("/experience/browse")}>
+              Browse Experiences
+            </Button>
+            <Button onClick={() => navigate("/login")}>Login</Button>
+          </Buttons>
         </Center>
       )}
     </Wrapper>
@@ -61,6 +63,12 @@ const Message = styled.p`
   margin-bottom: 20px;
   font-size: 20px;
   color: ${({ theme }) => theme.neutral["500"]};
+`;
+
+const Buttons = styled.div`
+  justify-content: center;
+  display: flex;
+  gap: 10px;
 `;
 
 export default Home;
