@@ -26,6 +26,9 @@ const Home = () => {
           <Message>
             To create trips and experiences please login or register an account
           </Message>
+          <div>
+          <Button onClick={() => navigate("/experience/browse")}>Browse Experiences</Button>
+          </div>
           <Button onClick={() => navigate("/login")}>Login</Button>
         </Center>
       )}
