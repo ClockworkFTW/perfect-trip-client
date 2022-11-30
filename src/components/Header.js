@@ -59,7 +59,10 @@ const Container = styled.nav`
   padding: 10px 30px;
 `;
 
-const Group = styled.div``;
+const Group = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 const Username = styled(Link)`
   margin-right: 8px;
